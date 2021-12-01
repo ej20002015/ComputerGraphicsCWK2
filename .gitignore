@@ -1,0 +1,11 @@
+**/bin/
+**/bin-int/
+!premake/bin/windows/
+!premake/bin/linux/
+
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
