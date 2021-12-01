@@ -34,7 +34,16 @@ project "application"
         "GLFW_INCLUDE_NONE" -- Include GLFW and OpenGL loader (glad) headers in any order by declaring this macro
     }
 
-    filter "configurations:Debug"
+	filter "system:linux"
+	
+		links
+		{
+			"X11",
+			"pthread",
+			"dl",
+		}
+
+	filter "configurations:Debug"
 		runtime "Debug"
 		symbols "on"
 

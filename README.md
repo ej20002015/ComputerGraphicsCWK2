@@ -11,7 +11,6 @@
 
 ### Linux
 - Generate CMake project files by performing the following command: \
-```sh scripts/GenerateLinuxFiles.bat```
-- Build the projects by running the following commands: \
-```cmake``` \
+```sh scripts/GenerateLinuxFiles.bash```
+- Build the projects by running the following command: \
 ```make```
