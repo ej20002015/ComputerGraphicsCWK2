@@ -5,6 +5,7 @@ workspace "CWK2"
     includeDirectories = {}
     includeDirectories["GLFW"] = "%{wks.location}/application/vendor/glfw/include/GLFW"
     includeDirectories["Glad"] = "%{wks.location}/application/vendor/glad/include"
+    includeDirectories["GLM"] = "%{wks.location}/application/vendor/glm"
 
     configurations
     {

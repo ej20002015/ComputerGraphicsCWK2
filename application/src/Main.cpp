@@ -1,8 +1,11 @@
 #include "glfw3.h"
 #include "glad/glad.h"
+#include "glm/glm.hpp"
 
 int main()
 {
+    glm::mat4 tempMat(1.0f);
+
     GLFWwindow* window;
 
     /* Initialize the library */

@@ -19,7 +19,8 @@ project "application"
     includedirs
     {
         "%{includeDirectories.GLFW}",
-        "%{includeDirectories.Glad}"
+        "%{includeDirectories.Glad}",
+        "%{includeDirectories.GLM}"
     }
 
     links
