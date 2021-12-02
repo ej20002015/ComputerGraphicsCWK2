@@ -3,6 +3,10 @@
 !premake/bin/windows/
 !premake/bin/linux/
 
+# Make
+
+**/Makefile
+
 # Visual Studio files and folder
 .vs/
 **.sln

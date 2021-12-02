@@ -12,6 +12,11 @@ public:
 
 	struct WindowProperties
 	{
+		// Need to define a default constructor for this struct because of a known GCC bug
+    WindowProperties()
+      : title("application"), width(1280), height(720) {}
+
+
 		std::string title = "Application";
 		uint32_t width = 1280;
 		uint32_t height = 720;
