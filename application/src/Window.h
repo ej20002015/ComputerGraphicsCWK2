@@ -34,6 +34,9 @@ public:
 	void setWindowCloseCallback(const std::function<void()>& callback) { m_windowCallbacks.windowCloseCallback = callback; }
 	void setWindowResizeCallback(const std::function<void(uint32_t, uint32_t)>& callback) { m_windowCallbacks.windowResizeCallback = callback; }
 
+	GLFWwindow* getGlfwWindow() { return m_glfwWindow; }
+	WindowProperties getWindowProperties() { return m_windowProperties; }
+
 private:
 
 	struct WindowCallbacks

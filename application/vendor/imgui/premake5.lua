@@ -24,7 +24,14 @@ project "ImGui"
 		"imstb_truetype.h",
 		--- include specific files for the glfw backend ---
 		"backends/imgui_impl_glfw.cpp",
-		"backends/imgui_impl_glfw.h"
+		"backends/imgui_impl_glfw.h",
+		"backends/imgui_impl_opengl3.cpp",
+		"backends/imgui_impl_opengl3.h"
+	}
+
+	defines
+	{
+		"IMGUI_IMPL_OPENGL_LOADER_GLAD"
 	}
 
 	includedirs

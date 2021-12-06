@@ -7,7 +7,12 @@
 
 **/Makefile
 
+# ImGui
+
+**/imgui.ini
+
 # Visual Studio files and folder
+
 .vs/
 **.sln
 **.vcxproj
