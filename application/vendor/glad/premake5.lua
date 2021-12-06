@@ -1,7 +1,7 @@
 project "Glad"
     kind "StaticLib"
     language "C"
-    staticruntime "on"
+    staticruntime "On"
 
     systemversion "latest"
 
@@ -22,8 +22,8 @@ project "Glad"
 
 	filter "configurations:Debug"
 		runtime "Debug"
-		symbols "on"
+		symbols "On"
 
 	filter "configurations:Release"
 		runtime "Release"
-		optimize "on"
+		optimize "On"

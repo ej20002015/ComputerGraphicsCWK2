@@ -20,13 +20,15 @@ project "application"
     {
         "%{includeDirectories.GLFW}",
         "%{includeDirectories.Glad}",
-        "%{includeDirectories.GLM}"
+        "%{includeDirectories.GLM}",
+        "%{includeDirectories.ImGui}"
     }
 
     links
     {
         "GLFW",
-        "Glad"
+        "Glad",
+        "ImGui"
     }
 
     defines
@@ -35,7 +37,7 @@ project "application"
     }
 
 	filter "system:linux"
-	
+
 		links
 		{
 			"X11",
