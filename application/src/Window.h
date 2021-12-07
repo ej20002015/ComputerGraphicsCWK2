@@ -23,6 +23,7 @@ public:
 	};
 
 public:
+
 	Window(const WindowProperties& windowProperties = WindowProperties());
 	~Window();
 
@@ -46,6 +47,7 @@ private:
 	};
 
 private:
+
 	WindowProperties m_windowProperties;
 	GLFWwindow* m_glfwWindow;
 	WindowCallbacks m_windowCallbacks;
