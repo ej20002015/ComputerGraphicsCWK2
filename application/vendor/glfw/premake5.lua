@@ -2,7 +2,7 @@ project "GLFW"
 	kind "StaticLib"
 	language "C"
 
-	systemversion "Latest"
+	systemversion "latest"
 	staticruntime "On"
 
 	targetdir ("bin/" .. outputDirectory .. "/%{prj.name}")

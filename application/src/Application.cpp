@@ -32,8 +32,6 @@ void Application::run()
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        UserInterface::newFrame();
-
         //TODO: Temp - remove
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glBegin(GL_TRIANGLES);
@@ -41,6 +39,8 @@ void Application::run()
         glVertex3f(0.5, -0.5, 1);
         glVertex3f(0.0, 0.5, 1);
         glEnd();
+
+        UserInterface::newFrame();
 
         ImGui::Begin("Hello World!");
         ImGui::Text("Hello World!");
@@ -52,10 +52,10 @@ void Application::run()
 
         ImGui::ShowDemoWindow();
 
+        UserInterface::endFrame(m_window->getWindowProperties().width, m_window->getWindowProperties().height);
+
         //Game loop
         m_window->onUpdate();
-
-        UserInterface::endFrame(m_window->getWindowProperties().width, m_window->getWindowProperties().height);
     }
 }
 
