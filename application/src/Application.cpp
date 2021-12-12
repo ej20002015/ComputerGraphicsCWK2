@@ -57,6 +57,7 @@ void Application::onWindowClose()
 void Application::onWindowResize(uint32_t width, uint32_t height)
 {
     Renderer::setViewport(width, height);
+    m_scene.onWindowResize(width, height);
 }
 
 Application::Application(const std::string& title)
@@ -82,5 +83,5 @@ Application::Application(const std::string& title)
     UserInterface::init(m_window->getGlfwWindow());
 
     // Initialise Scene
-    m_scene.init();
+    m_scene.init(windowProperties.width, windowProperties.height);
 }

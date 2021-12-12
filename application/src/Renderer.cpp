@@ -19,7 +19,7 @@ static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 void Renderer::init()
 {
-	glDebugMessageCallback(OpenGLErrorCallback, nullptr);
+	//glDebugMessageCallback(OpenGLErrorCallback, nullptr);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
 }

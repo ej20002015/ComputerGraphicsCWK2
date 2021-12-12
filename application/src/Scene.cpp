@@ -8,17 +8,15 @@
 
 #include "Renderer.h"
 
-void Scene::init()
+void Scene::init(uint32_t windowWidth, uint32_t windowHeight)
 {
-    glm::vec3 cameraPosition = { -3.0f, 3.0f, 2.0f };
-    glm::mat4 viewMatrix = glm::lookAt(cameraPosition, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f });
-    glm::mat4 projectionMatrix = glm::perspective(45.0f, 1.0f, 0.0001f, 100.0f);
+    m_camera.onWindowResize(windowWidth, windowHeight);
 
     glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(glm::value_ptr(viewMatrix));
+    glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
 
     glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(glm::value_ptr(projectionMatrix));
+    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 }
 
 void Scene::shutdown()
@@ -89,4 +87,12 @@ void Scene::onUIRender()
     ImGui::Begin("Hello World!");
     ImGui::Text("Hello World!");
     ImGui::End();
+}
+
+void Scene::onWindowResize(uint32_t width, uint32_t height)
+{
+    m_camera.onWindowResize(width, height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 }
