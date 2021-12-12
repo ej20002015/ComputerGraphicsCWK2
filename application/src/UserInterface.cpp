@@ -33,7 +33,7 @@ void UserInterface::init(GLFWwindow* glfwWindow)
 
     // Setup Platform/Renderer backends
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
-    ImGui_ImplOpenGL3_Init("#version 430 core");
+    ImGui_ImplOpenGL3_Init("#version 460 core");
 }
 
 void UserInterface::shutdown()
@@ -43,7 +43,7 @@ void UserInterface::shutdown()
     ImGui::DestroyContext();
 }
 
-void UserInterface::newFrame()
+void UserInterface::startFrame()
 {
     // Start the ImGui frame
     ImGui_ImplOpenGL3_NewFrame();

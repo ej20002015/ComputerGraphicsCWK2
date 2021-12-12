@@ -5,6 +5,7 @@
 class Log
 {
 public:
+
 	Log() = delete;
 
 	static void message(const std::string& message);

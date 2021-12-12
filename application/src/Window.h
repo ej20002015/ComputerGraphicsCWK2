@@ -37,6 +37,7 @@ public:
 
 	GLFWwindow* getGlfwWindow() { return m_glfwWindow; }
 	WindowProperties getWindowProperties() { return m_windowProperties; }
+	double getCurrentTime() { return glfwGetTime(); }
 
 private:
 

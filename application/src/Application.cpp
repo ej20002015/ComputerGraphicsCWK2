@@ -1,10 +1,7 @@
 #include "Application.h"
 
-//temp
-#include <glad/glad.h>
-#include <imgui.h>
-
 #include "UserInterface.h"
+#include "Renderer.h"
 
 Application* Application::s_instance = nullptr;
 
@@ -30,27 +27,18 @@ void Application::run()
 {
     while (m_running)
     {
-        glClear(GL_COLOR_BUFFER_BIT);
+        //Calculate time between frames
+        double currentTime = m_window->getCurrentTime();
+        double timeStep = currentTime - m_timeAtLastFrame;
+        m_timeAtLastFrame = currentTime;
 
-        //TODO: Temp - remove
-        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-        glBegin(GL_TRIANGLES);
-        glVertex3f(-0.5, -0.5, 1);
-        glVertex3f(0.5, -0.5, 1);
-        glVertex3f(0.0, 0.5, 1);
-        glEnd();
+        Renderer::clear();
 
-        UserInterface::newFrame();
+        m_scene.onUpdate(timeStep);
 
-        ImGui::Begin("Hello World!");
-        ImGui::Text("Hello World!");
-        ImGui::End();
+        UserInterface::startFrame();
 
-        ImGui::Begin("bob");
-        ImGui::Text("Hello");
-        ImGui::End();
-
-        ImGui::ShowDemoWindow();
+        m_scene.onUIRender();
 
         UserInterface::endFrame(m_window->getWindowProperties().width, m_window->getWindowProperties().height);
 
@@ -66,12 +54,11 @@ void Application::onWindowClose()
 
 void Application::onWindowResize(uint32_t width, uint32_t height)
 {
-    //Temp
-    glViewport(0, 0, width, height);
+    Renderer::setViewport(width, height);
 }
 
 Application::Application(const std::string& title)
-    : m_running(true)
+    : m_running(true), m_timeAtLastFrame(0.0f)
 {
     Window::init();
 
@@ -86,7 +73,9 @@ Application::Application(const std::string& title)
     m_window->setWindowCloseCallback([this]() -> void { this->onWindowClose(); });
     m_window->setWindowResizeCallback([this](uint32_t width, uint32_t height) -> void { this->onWindowResize(width, height); });
 
-    // Initialise ImGui
+    // Initialise the renderer
+    Renderer::init();
 
+    // Initialise ImGui
     UserInterface::init(m_window->getGlfwWindow());
 }
