@@ -2,8 +2,26 @@
 
 #include <glad/glad.h>
 
+#include "Log.h"
+
+static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+	switch (severity)
+	{
+	case GL_DEBUG_SEVERITY_HIGH:
+		Log::fatal("OPENGL ERROR: " + std::string(message));
+		break;
+	default:
+		Log::message("OPENGL ERROR: " + std::string(message));
+		break;
+	}
+}
+
 void Renderer::init()
 {
+	glDebugMessageCallback(OpenGLErrorCallback, nullptr);
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_DEPTH_TEST);
 }
 
 void Renderer::clear()

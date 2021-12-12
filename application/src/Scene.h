@@ -4,8 +4,11 @@ class Scene
 {
 public:
 
-	Scene();
-	~Scene();
+	void init();
+	void shutdown();
+
+	Scene() = default;
+	~Scene() = default;
 
 	void onUpdate(double timestep);
 

@@ -16,6 +16,8 @@ Application* Application::Create(const std::string& title)
 
 Application::~Application()
 {
+    m_scene.shutdown();
+
     if (m_window)
         UserInterface::shutdown();
         delete m_window;
@@ -78,4 +80,7 @@ Application::Application(const std::string& title)
 
     // Initialise ImGui
     UserInterface::init(m_window->getGlfwWindow());
+
+    // Initialise Scene
+    m_scene.init();
 }
