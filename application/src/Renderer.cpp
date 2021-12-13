@@ -22,6 +22,8 @@ void Renderer::init()
 	//glDebugMessageCallback(OpenGLErrorCallback, nullptr);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_LIGHTING);
 }
 
 void Renderer::clear()

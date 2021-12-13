@@ -20,5 +20,9 @@ public:
 
 private:
 
+	void setUpLights();
+
+private:
+
 	PerspectiveCamera m_camera;
 };
