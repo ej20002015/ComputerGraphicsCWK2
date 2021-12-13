@@ -7,6 +7,7 @@ workspace "CWK2"
     includeDirectories["Glad"]  = "%{wks.location}/application/vendor/glad/include"
     includeDirectories["GLM"]   = "%{wks.location}/application/vendor/glm"
     includeDirectories["ImGui"] = "%{wks.location}/application/vendor/imgui"
+    includeDirectories["stb_image"] = "%{wks.location}/application/vendor/stb_image"
 
     configurations
     {

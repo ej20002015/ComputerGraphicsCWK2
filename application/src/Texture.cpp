@@ -7,14 +7,17 @@
 
 Texture::Texture(const TextureSpecification& specification)
 {
-    int32_t width, height, bitsPerChannel;
+    int32_t width, height, channels;
 
     stbi_set_flip_vertically_on_load(true);
 
-    void* imageData = stbi_load(specification.filepath.c_str(),  &width, &height, &bitsPerChannel, STBI_rgb);
+    void* imageData = stbi_load(specification.filepath.c_str(),  &width, &height, &channels, STBI_rgb);
 
     if (!imageData)
         Log::fatal("Cannot load texture " + std::filesystem::current_path().string() + specification.filepath + ": " + std::string(stbi_failure_reason()));
+
+    m_width = static_cast<uint32_t>(width);
+    m_height = static_cast<uint32_t>(height);
 
     glGenTextures(1, &m_rendererID);
 

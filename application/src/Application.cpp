@@ -61,7 +61,7 @@ void Application::run()
     while (m_running)
     {
         //Calculate time between frames
-        double currentTime = m_window->getCurrentTime();
+        float currentTime = m_window->getCurrentTime();
         float timeStep = currentTime - m_timeAtLastFrame;
         m_timeAtLastFrame = currentTime;
 

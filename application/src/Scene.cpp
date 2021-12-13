@@ -22,7 +22,7 @@ void Scene::init()
     setUpMaterialLibrary();
 
     Texture::TextureSpecification specification;
-    specification.filepath = "assets/textures/Mercator-projection.png";
+    specification.filepath = "assets/textures/container2.png";
     m_textureTest = Texture(specification);
 }
 
@@ -32,7 +32,7 @@ void Scene::shutdown()
 
 void Scene::onUpdate(float timeStep)
 {
-    Renderer::setClearColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+    Renderer::setClearColour(glm::vec4(0.5f, 0.2f, 0.5f, 1.0f));
 
     // If the camera is being used then disable the cursor
     if (m_camera.getCameraActive() && !Application::getWindow().getWindowCursorDisabled())
@@ -43,15 +43,15 @@ void Scene::onUpdate(float timeStep)
     // Update the camera
     m_camera.onUpdate(timeStep);
 
-
     //TODO: Test texturing
     glEnable(GL_TEXTURE_2D);
-    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     m_textureTest.bind();
     glDisable(GL_LIGHTING);
 
-    glBegin(GL_POLYGON);
+    glBegin(GL_QUADS);
 
+    glNormal3f(0.0f, 0.0f, 1.0f);
     glTexCoord2f(0.0f, 1.0f);
     glVertex3f(-2.0f,  1.0f,  0.5f);
     glTexCoord2f(0.0f, 0.0f);
@@ -95,17 +95,19 @@ void Scene::onUpdate(float timeStep)
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 
+    //TODO: temp
     GLenum err;
     while((err = glGetError()) != GL_NO_ERROR)
-    {
         std::cout << err << std::endl;
-    }
 }
 
 void Scene::onUIRender()
 {
     ImGui::Begin("Hello World!");
     ImGui::Text("Hello World!");
+
+    ImGui::Image(reinterpret_cast<void*>(static_cast<uint64_t>((m_textureTest.getRendererID()))), { static_cast<float>(m_textureTest.getWidth()), static_cast<float>(m_textureTest.getHeight()) }, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+
     ImGui::End();
 }
 

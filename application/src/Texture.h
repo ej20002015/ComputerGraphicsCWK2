@@ -39,6 +39,8 @@ public:
     void bind();
 
     uint32_t getRendererID() { return m_rendererID; }
+    uint32_t getWidth() { return m_width; }
+    uint32_t getHeight() { return m_height; }
 
 private:
 
@@ -49,5 +51,6 @@ private:
 private:
 
     uint32_t m_rendererID = 0;
+    uint32_t m_width = 0, m_height = 0;
 
 };

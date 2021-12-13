@@ -36,7 +36,7 @@ void UserInterface::init()
     // Setup Platform/Renderer backends
     GLFWwindow* glfwWindow = Application::getWindow().getGlfwWindow();
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
-    ImGui_ImplOpenGL3_Init("#version 130");
+    ImGui_ImplOpenGL3_Init("#version 460");
 }
 
 void UserInterface::shutdown()
