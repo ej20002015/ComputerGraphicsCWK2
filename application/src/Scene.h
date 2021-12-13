@@ -1,6 +1,10 @@
 #pragma once
 
+#include <unordered_map>
+
 #include "PerspectiveCamera.h"
+#include "Material.h"
+#include "Texture.h"
 
 class Scene
 {
@@ -21,8 +25,11 @@ public:
 private:
 
 	void setUpLights();
+	void setUpMaterialLibrary();
 
 private:
 
 	PerspectiveCamera m_camera;
+	std::unordered_map<std::string, Material> m_materialLibrary;
+	Texture m_textureTest;
 };

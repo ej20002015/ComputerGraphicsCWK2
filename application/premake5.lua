@@ -14,6 +14,7 @@ project "application"
         "src/**.h",
         "src/**.hpp",
         "src/**.cpp",
+        "vendor/stb_image/stb_image.cpp"
     }
 
     includedirs
@@ -21,7 +22,8 @@ project "application"
         "%{includeDirectories.GLFW}",
         "%{includeDirectories.Glad}",
         "%{includeDirectories.GLM}",
-        "%{includeDirectories.ImGui}"
+        "%{includeDirectories.ImGui}",
+        "%{includeDirectories.stb_image}"
     }
 
     links
@@ -43,6 +45,7 @@ project "application"
 			"X11",
 			"pthread",
 			"dl",
+            "stdc++fs"
 		}
 
 	filter "configurations:Debug"

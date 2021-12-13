@@ -1,5 +1,8 @@
 #include "Scene.h"
 
+//TODO: Temp
+#include <iostream>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -16,35 +19,16 @@ void Scene::init()
     m_camera.init(windowWidth, windowHeight);
 
     setUpLights();
+    setUpMaterialLibrary();
+
+    Texture::TextureSpecification specification;
+    specification.filepath = "assets/textures/Mercator-projection.png";
+    m_textureTest = Texture(specification);
 }
 
 void Scene::shutdown()
 {
 }
-
-//TODO: temp
-typedef struct materialStruct {
-  GLfloat ambient[4];
-  GLfloat diffuse[4];
-  GLfloat specular[4];
-  GLfloat shininess;
-} materialStruct;
-
-
-static materialStruct brassMaterials = {
-  { 0.33, 0.22, 0.03, 1.0},
-  { 0.78, 0.57, 0.11, 1.0},
-  { 0.99, 0.91, 0.81, 1.0},
-  27.8 
-};
-
-static materialStruct whiteShinyMaterials = {
-  { 1.0, 1.0, 1.0, 1.0},
-  { 1.0, 1.0, 1.0, 1.0},
-  { 1.0, 1.0, 1.0, 1.0},
-  100.0 
-};
-
 
 void Scene::onUpdate(float timeStep)
 {
@@ -57,74 +41,52 @@ void Scene::onUpdate(float timeStep)
         Application::getWindow().setWindowCursorDisabled(false);
 
     // Update the camera
-    m_camera.onUpdate(timeStep);    
+    m_camera.onUpdate(timeStep);
 
-    // Render a cube
 
-    glBegin(GL_TRIANGLES);
+    //TODO: Test texturing
+    glEnable(GL_TEXTURE_2D);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    m_textureTest.bind();
+    glDisable(GL_LIGHTING);
 
-    glMaterialfv(GL_FRONT, GL_AMBIENT,    whiteShinyMaterials.ambient);
-    glMaterialfv(GL_FRONT, GL_DIFFUSE,    whiteShinyMaterials.diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR,   whiteShinyMaterials.specular);
-    glMaterialf(GL_FRONT, GL_SHININESS,   whiteShinyMaterials.shininess);
+    glBegin(GL_POLYGON);
 
-    
-    glColor4f(0.9f, 0.9f, 0.3f, 1.0f);
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-
-    glColor4f(0.9f, 0.9f, 0.3f, 1.0f);
-    glNormal3f(0.0f, 0.0f, -1.0f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-
-    glColor4f(0.4f, 0.3f, 0.8f, 1.0f);
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-
-    glColor4f(0.4f, 0.3f, 0.8f, 1.0f);
-    glNormal3f(-1.0f, 0.0f, 0.0f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-
-    glColor4f(0.2f, 0.5f, 0.6f, 1.0f);
-    glNormal3f(1.0f, 1.0f, 0.0f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-
-    glColor4f(0.2f, 0.5f, 0.6f, 1.0f);
-    glNormal3f(0.0f, -1.0f, 0.0f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-2.0f,  1.0f,  0.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-2.0f,  0.0f,  0.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(-1.0f,  0.0f,  0.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(-1.0f,  1.0f,  0.5f);
 
     glEnd();
 
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f(-0.5f,  0.5f,  0.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-0.5f, -0.5f,  0.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f( 0.5f,  0.5f,  0.5f);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(-0.5f, -0.5f,  0.5f);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f( 0.5f,  0.5f,  0.5f);
+
+    glEnd();
+
+    glEnable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+
+
+    // Render a cube
+    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("WHITE_SHINY"));
 
     // Set view and projection matrices
     glMatrixMode(GL_MODELVIEW);
@@ -132,6 +94,12 @@ void Scene::onUpdate(float timeStep)
 
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
+
+    GLenum err;
+    while((err = glGetError()) != GL_NO_ERROR)
+    {
+        std::cout << err << std::endl;
+    }
 }
 
 void Scene::onUIRender()
@@ -157,4 +125,15 @@ void Scene::setUpLights()
 
     glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(lightPosition));
     glPopMatrix();
+}
+
+void Scene::setUpMaterialLibrary()
+{
+    m_materialLibrary["WHITE_SHINY"] =
+    {
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        100.0f
+    };
 }
