@@ -4,7 +4,9 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-void UserInterface::init(GLFWwindow* glfwWindow)
+#include "Application.h"
+
+void UserInterface::init()
 {  
 
     /*
@@ -32,6 +34,7 @@ void UserInterface::init(GLFWwindow* glfwWindow)
     }
 
     // Setup Platform/Renderer backends
+    GLFWwindow* glfwWindow = Application::getWindow().getGlfwWindow();
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 }
@@ -51,9 +54,11 @@ void UserInterface::startFrame()
     ImGui::NewFrame();
 }
 
-void UserInterface::endFrame(uint32_t windowWidth, uint32_t windowHeight)
+void UserInterface::endFrame()
 {
     ImGuiIO& io = ImGui::GetIO();
+    uint32_t windowWidth = Application::getWindow().getWindowProperties().width;
+    uint32_t windowHeight = Application::getWindow().getWindowProperties().height;
     io.DisplaySize = ImVec2(static_cast<float>(windowWidth), static_cast<float>(windowHeight));
 
     // Rendering

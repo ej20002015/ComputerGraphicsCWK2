@@ -2,16 +2,47 @@
 
 #include "UserInterface.h"
 #include "Renderer.h"
+#include "Input.h"
+#include "Log.h"
 
 Application* Application::s_instance = nullptr;
 
-Application* Application::Create(const std::string& title)
+Window& Application::getWindow()
+{
+    return *(s_instance->m_window);
+}
+
+Application::Application(const std::string& title)
 {
     if (s_instance)
-        return s_instance;
+        Log::fatal("Application instance already exists!");
 
-    s_instance = new Application(title);
-    return s_instance;
+    s_instance = this;
+
+    Window::init();
+
+    // Create window for the application
+
+    Window::WindowProperties windowProperties;
+    windowProperties.title = title;
+    m_window = new Window(windowProperties);
+
+    // Register callbacks
+
+    m_window->setWindowCloseCallback([this]() -> void { this->onWindowClose(); });
+    m_window->setWindowResizeCallback([this](uint32_t width, uint32_t height) -> void { this->onWindowResize(width, height); });
+
+    // Initialise Input
+    Input::init();
+
+    // Initialise the renderer
+    Renderer::init();
+
+    // Initialise ImGui
+    UserInterface::init();
+
+    // Initialise Scene
+    m_scene.init();
 }
 
 Application::~Application()
@@ -31,7 +62,7 @@ void Application::run()
     {
         //Calculate time between frames
         double currentTime = m_window->getCurrentTime();
-        double timeStep = currentTime - m_timeAtLastFrame;
+        float timeStep = currentTime - m_timeAtLastFrame;
         m_timeAtLastFrame = currentTime;
 
         Renderer::clear();
@@ -42,7 +73,7 @@ void Application::run()
 
         m_scene.onUIRender();
 
-        UserInterface::endFrame(m_window->getWindowProperties().width, m_window->getWindowProperties().height);
+        UserInterface::endFrame();
 
         //Game loop
         m_window->onUpdate();
@@ -58,30 +89,4 @@ void Application::onWindowResize(uint32_t width, uint32_t height)
 {
     Renderer::setViewport(width, height);
     m_scene.onWindowResize(width, height);
-}
-
-Application::Application(const std::string& title)
-    : m_running(true), m_timeAtLastFrame(0.0f)
-{
-    Window::init();
-
-    // Create window for the application
-
-    Window::WindowProperties windowProperties;
-    windowProperties.title = title;
-    m_window = new Window(windowProperties);
-
-    // Register callbacks
-
-    m_window->setWindowCloseCallback([this]() -> void { this->onWindowClose(); });
-    m_window->setWindowResizeCallback([this](uint32_t width, uint32_t height) -> void { this->onWindowResize(width, height); });
-
-    // Initialise the renderer
-    Renderer::init();
-
-    // Initialise ImGui
-    UserInterface::init(m_window->getGlfwWindow());
-
-    // Initialise Scene
-    m_scene.init(windowProperties.width, windowProperties.height);
 }

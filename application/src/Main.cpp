@@ -2,7 +2,7 @@
 
 int main()
 {
-    Application* app = Application::Create();
+    Application* app = new Application("Computer Graphics CWK2");
     app->run();
     delete app;
 

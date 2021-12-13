@@ -7,27 +7,33 @@
 #include <imgui.h>
 
 #include "Renderer.h"
+#include "Application.h"
 
-void Scene::init(uint32_t windowWidth, uint32_t windowHeight)
+void Scene::init()
 {
-    m_camera.onWindowResize(windowWidth, windowHeight);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
+    uint32_t windowWidth = Application::getWindow().getWindowProperties().width;
+    uint32_t windowHeight = Application::getWindow().getWindowProperties().height;
+    m_camera.init(windowWidth, windowHeight);
 }
 
 void Scene::shutdown()
-{
+{ 
 }
 
-void Scene::onUpdate(double timestep)
+void Scene::onUpdate(float timeStep)
 {
     Renderer::setClearColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-    //Render a cube
+    // If the camera is being used then disable the cursor
+    if (m_camera.getCameraActive() && !Application::getWindow().getWindowCursorDisabled())
+        Application::getWindow().setWindowCursorDisabled(true);
+    else if (!m_camera.getCameraActive() && Application::getWindow().getWindowCursorDisabled())
+        Application::getWindow().setWindowCursorDisabled(false);
+
+    // Update the camera
+    m_camera.onUpdate(timeStep);
+
+    // Render a cube
 
     glBegin(GL_TRIANGLES);
     
@@ -80,6 +86,14 @@ void Scene::onUpdate(double timestep)
     glVertex3f( 0.5f, -0.5f, -0.5f);
 
     glEnd();
+
+
+    // Set view and projection matrices
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 }
 
 void Scene::onUIRender()
@@ -92,7 +106,4 @@ void Scene::onUIRender()
 void Scene::onWindowResize(uint32_t width, uint32_t height)
 {
     m_camera.onWindowResize(width, height);
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 }

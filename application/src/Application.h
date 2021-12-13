@@ -7,7 +7,8 @@ class Application
 {
 public:
 
-	static Application* Create(const std::string& title = "Application");
+	static Window& getWindow();
+	Application(const std::string& title = "Application");
 	~Application();
 
 	void run();
@@ -16,13 +17,9 @@ public:
 
 private:
 
-	Application(const std::string& title);
-
-private:
-
 	static Application* s_instance;
-	bool m_running;
+	bool m_running = true;
 	Window* m_window;
-	double m_timeAtLastFrame;
+	double m_timeAtLastFrame = 0.0f;
 	Scene m_scene;
 };

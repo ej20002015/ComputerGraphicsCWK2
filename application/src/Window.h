@@ -34,10 +34,12 @@ public:
 
 	void setWindowCloseCallback(const std::function<void()>& callback) { m_windowCallbacks.windowCloseCallback = callback; }
 	void setWindowResizeCallback(const std::function<void(uint32_t, uint32_t)>& callback) { m_windowCallbacks.windowResizeCallback = callback; }
+	void setWindowCursorDisabled(bool disabled);
 
 	GLFWwindow* getGlfwWindow() { return m_glfwWindow; }
 	WindowProperties getWindowProperties() { return m_windowProperties; }
 	double getCurrentTime() { return glfwGetTime(); }
+	bool getWindowCursorDisabled() { return m_cursorDisabled; }
 
 private:
 
@@ -52,4 +54,5 @@ private:
 	WindowProperties m_windowProperties;
 	GLFWwindow* m_glfwWindow;
 	WindowCallbacks m_windowCallbacks;
+	bool m_cursorDisabled = false;
 };

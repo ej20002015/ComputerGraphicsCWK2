@@ -6,13 +6,13 @@ class Scene
 {
 public:
 
-	void init(uint32_t windowWidth, uint32_t windowHeight);
+	void init();
 	void shutdown();
 
 	Scene() = default;
 	~Scene() = default;
 
-	void onUpdate(double timestep);
+	void onUpdate(float timeStep);
 
 	void onUIRender();
 

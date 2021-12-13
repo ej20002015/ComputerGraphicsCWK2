@@ -9,36 +9,6 @@ static void glfwErrorCallback(int32_t errorCode, const char* message)
     Log::fatal("GLFW ERROR: " + std::string(message));
 }
 
-Window::~Window()
-{
-    glfwDestroyWindow(m_glfwWindow);
-}
-
-void Window::init()
-{
-    //Initialiase glfw to be able to start making windows
-    if (!glfwInit())
-        Log::fatal("Cannot initialise GLFW");
-
-    //Set GLFW error callback function
-    glfwSetErrorCallback(glfwErrorCallback);
-}
-
-void Window::shutdown()
-{
-    //Shutdown glfw
-    glfwTerminate();
-}
-
-void Window::onUpdate()
-{
-    /* Swap front and back buffers */
-    glfwSwapBuffers(m_glfwWindow);
-
-    /* Poll for and process events */
-    glfwPollEvents();
-}
-
 Window::Window(const WindowProperties& windowProperties)
     : m_windowProperties(windowProperties), m_glfwWindow(nullptr)
 {
@@ -71,5 +41,49 @@ Window::Window(const WindowProperties& windowProperties)
         if (windowCallbacks.windowResizeCallback)
             windowCallbacks.windowResizeCallback(width, height);
     });
+}
+
+Window::~Window()
+{
+    glfwDestroyWindow(m_glfwWindow);
+}
+
+void Window::init()
+{
+    //Initialiase glfw to be able to start making windows
+    if (!glfwInit())
+        Log::fatal("Cannot initialise GLFW");
+
+    //Set GLFW error callback function
+    glfwSetErrorCallback(glfwErrorCallback);
+}
+
+void Window::shutdown()
+{
+    //Shutdown glfw
+    glfwTerminate();
+}
+
+void Window::onUpdate()
+{
+    /* Swap front and back buffers */
+    glfwSwapBuffers(m_glfwWindow);
+
+    /* Poll for and process events */
+    glfwPollEvents();
+}
+
+void Window::setWindowCursorDisabled(bool disabled)
+{
+    if (disabled)
+    {
+        glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        m_cursorDisabled = true;
+    }
+    else
+    {
+        glfwSetInputMode(m_glfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        m_cursorDisabled = false;
+    }
 }
 
