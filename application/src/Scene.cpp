@@ -93,7 +93,7 @@ void Scene::onUpdate(float timeStep)
 
 
     // Render a cube
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("WHITE_SHINY"));
+    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
 
     //TODO: temp
     GLenum err;
@@ -106,7 +106,14 @@ void Scene::onUIRender()
     ImGui::Begin("Hello World!");
     ImGui::Text("Hello World!");
 
-    ImGui::Image(reinterpret_cast<void*>(static_cast<uint64_t>((m_textureTest.getRendererID()))), { static_cast<float>(m_textureTest.getWidth()), static_cast<float>(m_textureTest.getHeight()) }, { 0.0f, 1.0f }, { 1.0f, 0.0f });
+    static bool smoothShading = true;
+    if (ImGui::Checkbox("Smooth", &smoothShading))
+    {
+        if (smoothShading)
+            glShadeModel(GL_SMOOTH);
+        else
+            glShadeModel(GL_FLAT);
+    }
 
     ImGui::End();
 }
@@ -123,7 +130,7 @@ void Scene::setUpLights()
 	glLoadIdentity();
 
     glEnable(GL_LIGHT0);
-    glm::vec4 lightPosition(0.0f, 5.0f, 3.0f, 1.0f);
+    glm::vec4 lightPosition(2.0f, 2.0f, 0.0f, 1.0f);
 
     glLightfv(GL_LIGHT0, GL_POSITION, glm::value_ptr(lightPosition));
     glPopMatrix();
@@ -137,5 +144,21 @@ void Scene::setUpMaterialLibrary()
         { 1.0f, 1.0f, 1.0f, 1.0f },
         { 1.0f, 1.0f, 1.0f, 1.0f },
         100.0f
+    };
+
+    m_materialLibrary["BLACK_PLASTIC"] =
+    {
+        { 0.0f, 0.0f, 0.0f, 1.0f },
+        { 0.001f, 0.001f, 0.001f, 1.0f },
+        { 0.5f, 0.5f, 0.5f, 1.0f },
+        32.0f
+    };
+
+    m_materialLibrary["GOLD"] =
+    {
+        { 0.24725f, 0.1995f, 0.0745f, 1.0f },
+        { 0.75164f, 0.60648f, 0.22648f, 1.0f },
+        { 0.628281f, 0.555802f, 0.366065f, 1.0f },
+        51.2f
     };
 }
