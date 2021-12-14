@@ -32,4 +32,5 @@ private:
 	PerspectiveCamera m_camera;
 	std::unordered_map<std::string, Material> m_materialLibrary;
 	Texture m_textureTest;
+	Texture m_grassTexture;
 };

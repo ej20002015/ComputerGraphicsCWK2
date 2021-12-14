@@ -36,10 +36,10 @@ public:
 	void setWindowResizeCallback(const std::function<void(uint32_t, uint32_t)>& callback) { m_windowCallbacks.windowResizeCallback = callback; }
 	void setWindowCursorDisabled(bool disabled);
 
-	GLFWwindow* getGlfwWindow() { return m_glfwWindow; }
-	WindowProperties getWindowProperties() { return m_windowProperties; }
-	float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
-	bool getWindowCursorDisabled() { return m_cursorDisabled; }
+	GLFWwindow* getGlfwWindow() const { return m_glfwWindow; }
+	WindowProperties getWindowProperties() const { return m_windowProperties; }
+	float getCurrentTime() const { return static_cast<float>(glfwGetTime()); }
+	bool getWindowCursorDisabled() const { return m_cursorDisabled; }
 
 private:
 

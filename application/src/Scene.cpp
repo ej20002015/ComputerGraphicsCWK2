@@ -21,10 +21,15 @@ void Scene::init()
     setUpLights();
     setUpMaterialLibrary();
 
-    Texture::TextureSpecification specification;
-    specification.wrappingMode = Texture::WrappingMode::REPEAT;
-    specification.filepath = "assets/textures/markus.jpg";
-    m_textureTest.init(specification);
+    Texture::TextureSpecification testTexturespecification;
+    testTexturespecification.wrappingMode = Texture::WrappingMode::REPEAT;
+    testTexturespecification.filepath = "assets/textures/markus.jpg";
+    m_textureTest.init(testTexturespecification);
+
+    Texture::TextureSpecification grassTextureSpecfication;
+    grassTextureSpecfication.wrappingMode = Texture::WrappingMode::REPEAT;
+    grassTextureSpecfication.filepath = "assets/textures/grass.jpg";
+    m_grassTexture.init(grassTextureSpecfication);
 }
 
 void Scene::shutdown()
@@ -33,7 +38,7 @@ void Scene::shutdown()
 
 void Scene::onUpdate(float timeStep)
 {
-    Renderer::setClearColour(glm::vec4(0.5f, 0.2f, 0.5f, 1.0f));
+    Renderer::setClearColour(glm::vec4(0.396f, 0.761f, 0.961f, 1.0f));
 
     // If the camera is being used then disable the cursor
     if (m_camera.getCameraActive() && !Application::getWindow().getWindowCursorDisabled())
@@ -51,49 +56,25 @@ void Scene::onUpdate(float timeStep)
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 
-    //TODO: Test texturing
-    glEnable(GL_TEXTURE_2D);
-    m_textureTest.bind();
-    glDisable(GL_LIGHTING);
-
-    glBegin(GL_QUADS);
-
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex3f(-2.0f,  1.0f,  0.5f);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(-2.0f,  0.0f,  0.5f);
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(-1.0f,  0.0f,  0.5f);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(-1.0f,  1.0f,  0.5f);
-
-    glEnd();
-
-    glBegin(GL_TRIANGLES);
-
-    glNormal3f(0.0f, 0.0f, 1.0f);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-
-    glEnd();
-
-    glEnable(GL_LIGHTING);
-    glDisable(GL_TEXTURE_2D);
+    // Render some ground
+    Renderer::CubeTextureSpecification textureSpecificationGround;
+    textureSpecificationGround.topFace = &m_grassTexture;
+    Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 50.0f);
 
 
     // Render a cube
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
+
+    // Render a textured cube
+
+    Renderer::CubeTextureSpecification textureSpecification;
+    textureSpecification.frontFace = &m_textureTest;
+    textureSpecification.backFace = &m_textureTest;
+    textureSpecification.rightFace = &m_textureTest;
+    textureSpecification.leftFace = &m_textureTest;
+    textureSpecification.topFace = &m_textureTest;
+    textureSpecification.bottomFace = &m_textureTest;
+    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecification);
 }
 
 void Scene::onUIRender()
@@ -155,5 +136,13 @@ void Scene::setUpMaterialLibrary()
         { 0.75164f, 0.60648f, 0.22648f, 1.0f },
         { 0.628281f, 0.555802f, 0.366065f, 1.0f },
         51.2f
+    };
+
+    m_materialLibrary["NO_MATERIAL"] =
+    {
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+        0.0f
     };
 }

@@ -36,11 +36,11 @@ public:
     ~Texture();
     void init(const TextureSpecification& specification);
 
-    void bind();
+    void bind() const;
 
-    uint32_t getRendererID() { return m_rendererID; }
-    uint32_t getWidth() { return m_width; }
-    uint32_t getHeight() { return m_height; }
+    uint32_t getRendererID() const { return m_rendererID; }
+    uint32_t getWidth() const { return m_width; }
+    uint32_t getHeight() const { return m_height; }
 
 private:
 

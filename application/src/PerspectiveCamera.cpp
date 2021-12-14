@@ -79,12 +79,12 @@ void PerspectiveCamera::onWindowResize(uint32_t width, uint32_t height)
     m_aspectRatio = static_cast<float>(width) / static_cast<float>(height);
 }
 
-glm::mat4 PerspectiveCamera::getViewMatrix()
+glm::mat4 PerspectiveCamera::getViewMatrix() const
 {
     return glm::lookAt(m_position, m_position + m_viewDirection, UP_VECTOR);
 }
 
-glm::mat4 PerspectiveCamera::getProjectionMatrix()
+glm::mat4 PerspectiveCamera::getProjectionMatrix() const
 {
     return glm::perspective(m_FOV, m_aspectRatio, m_nearClip, m_farClip);
 }

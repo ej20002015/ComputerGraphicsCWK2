@@ -18,6 +18,76 @@ static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	}
 }
 
+static glm::vec3 cubeVertexPositionsFrontFace[6] =
+{
+    { -0.5f,  0.5f,  0.5f },
+    { -0.5f, -0.5f,  0.5f },
+    {  0.5f,  0.5f,  0.5f },
+    { -0.5f, -0.5f,  0.5f },
+    {  0.5f, -0.5f,  0.5f },
+    {  0.5f,  0.5f,  0.5f }
+};
+
+static glm::vec3 cubeVertexPositionsBackFace[6] =
+{
+    {  0.5f,  0.5f, -0.5f },
+    {  0.5f, -0.5f, -0.5f },
+    { -0.5f,  0.5f, -0.5f },
+    {  0.5f, -0.5f, -0.5f },
+    { -0.5f, -0.5f, -0.5f },
+    { -0.5f,  0.5f, -0.5f }
+};
+
+static glm::vec3 cubeVertexPositionsRightFace[6] =
+{
+    {  0.5f,  0.5f,  0.5f },
+    {  0.5f, -0.5f,  0.5f },
+    {  0.5f,  0.5f, -0.5f },
+    {  0.5f, -0.5f,  0.5f },
+    {  0.5f, -0.5f, -0.5f },
+    {  0.5f,  0.5f, -0.5f }
+};
+
+static glm::vec3 cubeVertexPositionsLeftFace[6] =
+{
+    { -0.5f,  0.5f, -0.5f },
+    { -0.5f, -0.5f, -0.5f },
+    { -0.5f,  0.5f,  0.5f },
+    { -0.5f, -0.5f, -0.5f },
+    { -0.5f, -0.5f,  0.5f },
+    { -0.5f,  0.5f,  0.5f }
+};
+
+static glm::vec3 cubeVertexPositionsTopFace[6] =
+{
+    { -0.5f,  0.5f, -0.5f },
+    { -0.5f,  0.5f,  0.5f },
+    {  0.5f,  0.5f, -0.5f },
+    { -0.5f,  0.5f,  0.5f },
+    {  0.5f,  0.5f,  0.5f },
+    {  0.5f,  0.5f, -0.5f }
+};
+
+static glm::vec3 cubeVertexPositionsBottomFace[6] =
+{
+    { -0.5f, -0.5f,  0.5f },
+    { -0.5f, -0.5f, -0.5f },
+    {  0.5f, -0.5f,  0.5f },
+    { -0.5f, -0.5f, -0.5f },
+    {  0.5f, -0.5f, -0.5f },
+    {  0.5f, -0.5f,  0.5f }
+};
+
+static glm::vec2 cubeVertexTexCoords[6] =
+{
+    { 0.0f, 1.0f },
+    { 0.0f, 0.0f },
+    { 1.0f, 1.0f },
+    { 0.0f, 0.0f },
+    { 1.0f, 0.0f },
+    { 1.0f, 1.0f }
+};
+
 void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 {
 	loadMaterial(material);
@@ -33,60 +103,193 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 	// Front and back faces
 
     glNormal3f( 0.0f,  0.0f,  1.0f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsFrontFace[i].x, cubeVertexPositionsFrontFace[i].y, cubeVertexPositionsFrontFace[i].z);
 
     glNormal3f( 0.0f,  0.0f, -1.0f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsBackFace[i].x, cubeVertexPositionsBackFace[i].y, cubeVertexPositionsBackFace[i].z);
 
 	// Right and left faces
 
     glNormal3f( 1.0f,  0.0f,  0.0f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsRightFace[i].x, cubeVertexPositionsRightFace[i].y, cubeVertexPositionsRightFace[i].z);
 
     glNormal3f(-1.0f,  0.0f,  0.0f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsLeftFace[i].x, cubeVertexPositionsLeftFace[i].y, cubeVertexPositionsLeftFace[i].z);
 
 	// Top and Bottom faces
 
     glNormal3f( 0.0f,  1.0f,  0.0f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsTopFace[i].x, cubeVertexPositionsTopFace[i].y, cubeVertexPositionsTopFace[i].z);
 
     glNormal3f( 0.0f, -1.0f,  0.0f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f,  0.5f);
+    for (uint32_t i = 0; i < 6; i++)
+        glVertex3f(cubeVertexPositionsBottomFace[i].x, cubeVertexPositionsBottomFace[i].y, cubeVertexPositionsBottomFace[i].z);
 
     glEnd();
 
 	glPopMatrix();
+}
+
+void Renderer::drawCube(const glm::mat4& transform, const Material& material, const CubeTextureSpecification& textureSpecification, float tilingFactor)
+{
+    loadMaterial(material);
+
+    // Apply the transform
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    // Front face
+
+    if (textureSpecification.frontFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.frontFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 0.0f, 1.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsFrontFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+    
+    glEnd();
+
+    if (textureSpecification.frontFace)
+        glDisable(GL_TEXTURE_2D);
+
+    // Back face
+
+    if (textureSpecification.backFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.backFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 0.0f, -1.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsBackFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+
+    glEnd();
+
+    if (textureSpecification.backFace)
+        glDisable(GL_TEXTURE_2D);
+
+    // Right face
+
+    if (textureSpecification.rightFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.rightFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsRightFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+
+    glEnd();
+
+    if (textureSpecification.rightFace)
+        glDisable(GL_TEXTURE_2D);
+
+    // Left face
+
+    if (textureSpecification.leftFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.leftFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, -1.0f, 0.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsLeftFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+
+    glEnd();
+
+    if (textureSpecification.leftFace)
+        glDisable(GL_TEXTURE_2D);
+
+    // Top face
+
+    if (textureSpecification.topFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.topFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsTopFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+
+    glEnd();
+
+    if (textureSpecification.topFace)
+        glDisable(GL_TEXTURE_2D);
+    
+    // Bottom face
+
+    if (textureSpecification.bottomFace)
+    {
+        glEnable(GL_TEXTURE_2D);
+        textureSpecification.bottomFace->bind();
+    }
+
+    glBegin(GL_TRIANGLES);
+
+    glNormal3f(0.0f, 1.0f, 0.0f);
+    for (uint32_t i = 0; i < 6; i++)
+    {
+        glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
+        const glm::vec3& vertexPositions = cubeVertexPositionsBottomFace[i];
+        glTexCoord2f(tiledTexCoords.x, tiledTexCoords.y);
+        glVertex3f(vertexPositions.x, vertexPositions.y, vertexPositions.z);
+    }
+
+    glEnd();
+
+    if (textureSpecification.bottomFace)
+        glDisable(GL_TEXTURE_2D);
+
+    glPopMatrix();
 }
 
 void Renderer::init()

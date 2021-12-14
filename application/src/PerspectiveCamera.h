@@ -13,10 +13,10 @@ public:
 
     void onWindowResize(uint32_t width, uint32_t height);
 
-    glm::mat4 getViewMatrix();
-    glm::mat4 getProjectionMatrix();
+    glm::mat4 getViewMatrix() const;
+    glm::mat4 getProjectionMatrix() const;
 
-    bool getCameraActive() { return m_cameraActive; }
+    bool getCameraActive() const { return m_cameraActive; }
 
 private:
 
