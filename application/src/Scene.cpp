@@ -94,11 +94,6 @@ void Scene::onUpdate(float timeStep)
 
     // Render a cube
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
-
-    //TODO: temp
-    GLenum err;
-    while((err = glGetError()) != GL_NO_ERROR)
-        std::cout << err << std::endl;
 }
 
 void Scene::onUIRender()

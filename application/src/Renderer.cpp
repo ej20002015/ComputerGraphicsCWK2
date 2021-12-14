@@ -32,7 +32,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
     
 	// Front and back faces
 
-    glNormal3f(0.0f, 0.0f, 1.0f);
+    glNormal3f( 0.0f,  0.0f,  1.0f);
     glVertex3f(-0.5f,  0.5f,  0.5f);
     glVertex3f(-0.5f, -0.5f,  0.5f);
     glVertex3f( 0.5f,  0.5f,  0.5f);
@@ -40,25 +40,25 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
     glVertex3f( 0.5f, -0.5f,  0.5f);
     glVertex3f( 0.5f,  0.5f,  0.5f);
 
-    glNormal3f(0.0f, 0.0f, -1.0f);
+    glNormal3f( 0.0f,  0.0f, -1.0f);
     glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f,  0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f, -0.5f);
     glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
+    glVertex3f(-0.5f,  0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f, -0.5f, -0.5f);
+    glVertex3f(-0.5f,  0.5f, -0.5f);
 
 	// Right and left faces
 
-    glNormal3f(1.0f, 0.0f, 0.0f);
-    glVertex3f( 0.5f,  0.5f, -0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glNormal3f( 1.0f,  0.0f,  0.0f);
     glVertex3f( 0.5f,  0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
     glVertex3f( 0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f,  0.5f,  0.5f);
+    glVertex3f( 0.5f,  0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
+    glVertex3f( 0.5f, -0.5f, -0.5f);
+    glVertex3f( 0.5f,  0.5f, -0.5f);
 
-    glNormal3f(-1.0f, 0.0f, 0.0f);
+    glNormal3f(-1.0f,  0.0f,  0.0f);
     glVertex3f(-0.5f,  0.5f, -0.5f);
     glVertex3f(-0.5f, -0.5f, -0.5f);
     glVertex3f(-0.5f,  0.5f,  0.5f);
@@ -68,7 +68,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 
 	// Top and Bottom faces
 
-    glNormal3f(0.0f, 1.0f, 0.0f);
+    glNormal3f( 0.0f,  1.0f,  0.0f);
     glVertex3f(-0.5f,  0.5f, -0.5f);
     glVertex3f(-0.5f,  0.5f,  0.5f);
     glVertex3f( 0.5f,  0.5f, -0.5f);
@@ -76,13 +76,13 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
     glVertex3f( 0.5f,  0.5f,  0.5f);
     glVertex3f( 0.5f,  0.5f, -0.5f);
 
-    glNormal3f(0.0f, -1.0f, 0.0f);
+    glNormal3f( 0.0f, -1.0f,  0.0f);
+    glVertex3f(-0.5f, -0.5f,  0.5f);
     glVertex3f(-0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
-    glVertex3f( 0.5f, -0.5f, -0.5f);
-    glVertex3f(-0.5f, -0.5f,  0.5f);
     glVertex3f( 0.5f, -0.5f,  0.5f);
+    glVertex3f(-0.5f, -0.5f, -0.5f);
     glVertex3f( 0.5f, -0.5f, -0.5f);
+    glVertex3f( 0.5f, -0.5f,  0.5f);
 
     glEnd();
 
@@ -100,11 +100,11 @@ void Renderer::init()
 
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_LIGHTING);
-
-    //TODO: Enable culling
-    /*glFrontFace(GL_CCW);
+    
+    // Enable backface culling
+    glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
-    glEnable(GL_CULL_FACE);*/
+    glEnable(GL_CULL_FACE);
 }
 
 void Renderer::clear()
