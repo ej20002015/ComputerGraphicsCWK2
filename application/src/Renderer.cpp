@@ -92,11 +92,19 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 void Renderer::init()
 {
 	glDebugMessageCallback(OpenGLErrorCallback, nullptr);
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);
+
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_LIGHTING);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    //TODO: Enable culling
+    /*glFrontFace(GL_CCW);
+    glCullFace(GL_BACK);
+    glEnable(GL_CULL_FACE);*/
 }
 
 void Renderer::clear()

@@ -38,7 +38,7 @@ public:
 
 	GLFWwindow* getGlfwWindow() { return m_glfwWindow; }
 	WindowProperties getWindowProperties() { return m_windowProperties; }
-	double getCurrentTime() { return glfwGetTime(); }
+	float getCurrentTime() { return static_cast<float>(glfwGetTime()); }
 	bool getWindowCursorDisabled() { return m_cursorDisabled; }
 
 private:

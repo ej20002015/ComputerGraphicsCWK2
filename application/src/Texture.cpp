@@ -4,8 +4,7 @@
 
 #include "Log.h"
 
-
-Texture::Texture(const TextureSpecification& specification)
+void Texture::init(const TextureSpecification& specification)
 {
     int32_t width, height, channels;
 
@@ -18,6 +17,8 @@ Texture::Texture(const TextureSpecification& specification)
 
     m_width = static_cast<uint32_t>(width);
     m_height = static_cast<uint32_t>(height);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     glGenTextures(1, &m_rendererID);
 

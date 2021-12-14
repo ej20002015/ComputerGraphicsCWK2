@@ -20,6 +20,6 @@ private:
 	static Application* s_instance;
 	bool m_running = true;
 	Window* m_window;
-	double m_timeAtLastFrame = 0.0f;
+	float m_timeAtLastFrame = 0.0f;
 	Scene m_scene;
 };

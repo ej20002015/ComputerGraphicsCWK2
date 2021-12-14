@@ -32,9 +32,9 @@ public:
 
 public:
 
-    Texture(const TextureSpecification& specification);
     Texture() = default;
     ~Texture();
+    void init(const TextureSpecification& specification);
 
     void bind();
 

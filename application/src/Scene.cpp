@@ -22,8 +22,9 @@ void Scene::init()
     setUpMaterialLibrary();
 
     Texture::TextureSpecification specification;
-    specification.filepath = "assets/textures/container2.png";
-    m_textureTest = Texture(specification);
+    specification.wrappingMode = Texture::WrappingMode::REPEAT;
+    specification.filepath = "assets/textures/markus.jpg";
+    m_textureTest.init(specification);
 }
 
 void Scene::shutdown()
@@ -43,9 +44,15 @@ void Scene::onUpdate(float timeStep)
     // Update the camera
     m_camera.onUpdate(timeStep);
 
+    // Set view and projection matrices
+    glMatrixMode(GL_MODELVIEW);
+    glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
+
     //TODO: Test texturing
     glEnable(GL_TEXTURE_2D);
-    //glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     m_textureTest.bind();
     glDisable(GL_LIGHTING);
 
@@ -87,13 +94,6 @@ void Scene::onUpdate(float timeStep)
 
     // Render a cube
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("WHITE_SHINY"));
-
-    // Set view and projection matrices
-    glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 
     //TODO: temp
     GLenum err;

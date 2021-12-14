@@ -12,6 +12,8 @@ static void glfwErrorCallback(int32_t errorCode, const char* message)
 Window::Window(const WindowProperties& windowProperties)
     : m_windowProperties(windowProperties), m_glfwWindow(nullptr)
 {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     m_glfwWindow = glfwCreateWindow(m_windowProperties.width, m_windowProperties.height, m_windowProperties.title.c_str(), NULL, NULL);
     if (!m_glfwWindow)
     {
