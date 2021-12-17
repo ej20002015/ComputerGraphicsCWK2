@@ -6,7 +6,7 @@
 #include "Input.h"
 
 PerspectiveCamera::PerspectiveCamera()
-    : UP_VECTOR(0.0f, 1.0f, 0.0f), m_position(0.0f, 0.0f, 3.0f), m_viewDirection(0.0f, 0.0f, -1.0f), m_lastMousePosition(0.0f) {}
+    : UP_VECTOR(0.0f, 1.0f, 0.0f), m_position(0.0f, 1.0f, 3.0f), m_viewDirection(0.0f, 0.0f, -1.0f), m_lastMousePosition(0.0f) {}
 
 void PerspectiveCamera::init(uint32_t windowWidth, uint32_t windowHeight)
 {
@@ -16,8 +16,6 @@ void PerspectiveCamera::init(uint32_t windowWidth, uint32_t windowHeight)
 
 void PerspectiveCamera::onUpdate(float timeStep)
 {
-    glm::vec3 rightDirection = glm::cross(m_viewDirection, UP_VECTOR);
-
     // Process mouse input
 
     // Only modify the camera when the right mouse button is being pressed
@@ -54,6 +52,10 @@ void PerspectiveCamera::onUpdate(float timeStep)
 
     // Process key inputs
 
+    glm::vec3 rightDirection = glm::cross(m_viewDirection, UP_VECTOR);
+
+    float currentYPosition = m_position.y;
+
     if (Input::isKeyPressed(KeyCode::KEY_W))
     {
         m_position += m_viewDirection * m_speed * timeStep;
@@ -72,6 +74,8 @@ void PerspectiveCamera::onUpdate(float timeStep)
         m_position += -rightDirection * m_speed * timeStep;
     }
 
+    if (m_lockYAxis)
+        m_position.y = currentYPosition;
 }
 
 void PerspectiveCamera::onWindowResize(uint32_t width, uint32_t height)

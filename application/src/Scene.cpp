@@ -27,7 +27,7 @@ void Scene::init()
     m_textureTest.init(testTexturespecification);
 
     Texture::TextureSpecification grassTextureSpecfication;
-    grassTextureSpecfication.wrappingMode = Texture::WrappingMode::REPEAT;
+    grassTextureSpecfication.wrappingMode = Texture::WrappingMode::MIRRORED_REPEAT;
     grassTextureSpecfication.filepath = "assets/textures/grass.jpg";
     m_grassTexture.init(grassTextureSpecfication);
 }
@@ -90,6 +90,10 @@ void Scene::onUIRender()
         else
             glShadeModel(GL_FLAT);
     }
+
+    bool cameraLockYAxis = m_camera.getLockYAxis();
+    if (ImGui::Checkbox("Lock Camera Y Axis", &cameraLockYAxis))
+        m_camera.setLockYAxis(cameraLockYAxis);
 
     ImGui::End();
 }
