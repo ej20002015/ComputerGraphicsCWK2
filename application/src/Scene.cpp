@@ -59,11 +59,13 @@ void Scene::onUpdate(float timeStep)
     // Render some ground
     Renderer::CubeTextureSpecification textureSpecificationGround;
     textureSpecificationGround.topFace = &m_grassTexture;
-    Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 50.0f);
+    //Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 50.0f);
 
 
     // Render a cube
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
+    //Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
+
+    Renderer::drawCircle(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("NO_MATERIAL"));
 
     // Render a textured cube
 
@@ -74,7 +76,7 @@ void Scene::onUpdate(float timeStep)
     textureSpecification.leftFace = &m_textureTest;
     textureSpecification.topFace = &m_textureTest;
     textureSpecification.bottomFace = &m_textureTest;
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecification);
+    //Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecification);
 }
 
 void Scene::onUIRender()

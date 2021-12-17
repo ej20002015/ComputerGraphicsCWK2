@@ -28,6 +28,10 @@ public:
 	static void drawCube(const glm::mat4& transform, const Material& material);
 	static void drawCube(const glm::mat4& transform, const Material& material, const CubeTextureSpecification& textureSpecification, float tilingFactor = 1.0f);
 
+	static void drawCylinder(const glm::mat4& transform, const Material& material);
+
+	static void drawCircle(const glm::mat4& transform, const Material& material);
+
 	// Utility methods
 
 	static void clear();

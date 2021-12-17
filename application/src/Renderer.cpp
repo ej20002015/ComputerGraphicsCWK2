@@ -294,6 +294,49 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
     glPopMatrix();
 }
 
+void Renderer::drawCylinder(const glm::mat4& transform, const Material& material)
+{
+}
+
+void Renderer::drawCircle(const glm::mat4& transform, const Material& material)
+{
+	loadMaterial(material);
+
+    // Apply the transform
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+	uint32_t detailValue = 100;
+
+	// Construct using a triangle fan
+
+	float distanceBetweenCirclePoints = 360.0f / static_cast<float>(detailValue);
+
+	constexpr glm::vec3 circleCenter = { 0.0f, 0.0f, 0.0f };
+
+	glBegin(GL_TRIANGLES);
+
+	for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
+	{
+		glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)), 0.5f * glm::cos(glm::radians(theta)), 0.0f };
+		glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(circleCenter, 1.0f);
+		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
+		glm::vec4 directionToFinalPoint = rotationMatrix * dir;
+		glm::vec4 finalPoint = glm::vec4(circleCenter, 1.0f) + directionToFinalPoint;
+
+		glNormal3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(circleCenter.x, circleCenter.y, circleCenter.z);
+		glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
+		glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+	}
+
+	glEnd();
+
+	glPopMatrix();
+}
+
 void Renderer::init()
 {
 	// Get OpenGL version to determine whether
