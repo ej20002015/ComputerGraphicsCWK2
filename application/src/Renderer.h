@@ -35,7 +35,13 @@ public:
 
 	static void setViewport(uint32_t width, uint32_t height);
 
+	static uint32_t getOpenGLMajorVersion() { return s_openGLMajorVersion; }
+
 private:
 
 	static void loadMaterial(const Material& material);
+
+private:
+
+	static uint32_t s_openGLMajorVersion;
 };

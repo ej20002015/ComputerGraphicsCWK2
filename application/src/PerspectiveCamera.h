@@ -13,12 +13,12 @@ public:
 
     void onWindowResize(uint32_t width, uint32_t height);
 
-    void setLockYAxis(bool lockYAxis) { m_lockYAxis = lockYAxis; }
+    void setLockYAxisPosition(bool lockYAxisPosition) { m_lockYAxisPosition = lockYAxisPosition; }
 
     glm::mat4 getViewMatrix() const;
     glm::mat4 getProjectionMatrix() const;
     bool getCameraActive() const { return m_cameraActive; }
-    bool getLockYAxis() const { return m_lockYAxis; }
+    bool getLockYAxisPosition() const { return m_lockYAxisPosition; }
 
 private:
 
@@ -39,5 +39,5 @@ private:
     float m_sensitivity = 0.2f;
     bool m_initialCameraManipulation = true;
     bool m_cameraActive = false;
-    bool m_lockYAxis = false;
+    bool m_lockYAxisPosition = false;
 };

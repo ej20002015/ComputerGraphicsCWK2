@@ -91,9 +91,9 @@ void Scene::onUIRender()
             glShadeModel(GL_FLAT);
     }
 
-    bool cameraLockYAxis = m_camera.getLockYAxis();
-    if (ImGui::Checkbox("Lock Camera Y Axis", &cameraLockYAxis))
-        m_camera.setLockYAxis(cameraLockYAxis);
+    bool cameraLockYAxisPosition = m_camera.getLockYAxisPosition();
+    if (ImGui::Checkbox("Lock Camera Y Axis Position", &cameraLockYAxisPosition))
+        m_camera.setLockYAxisPosition(cameraLockYAxisPosition);
 
     ImGui::End();
 }

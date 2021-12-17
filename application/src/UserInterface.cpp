@@ -5,6 +5,7 @@
 #include <backends/imgui_impl_opengl3.h>
 
 #include "Application.h"
+#include "Renderer.h"
 
 void UserInterface::init()
 {  
@@ -36,7 +37,16 @@ void UserInterface::init()
     // Setup Platform/Renderer backends
     GLFWwindow* glfwWindow = Application::getWindow().getGlfwWindow();
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
-    ImGui_ImplOpenGL3_Init("#version 460");
+
+    switch (Renderer::getOpenGLMajorVersion())
+    {
+        case 4:
+            ImGui_ImplOpenGL3_Init("#version 460");
+            break;
+        default:
+            ImGui_ImplOpenGL3_Init("#version 130");
+            break;
+    }
 }
 
 void UserInterface::shutdown()

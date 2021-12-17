@@ -5,6 +5,8 @@
 
 #include "Log.h"
 
+uint32_t Renderer::s_openGLMajorVersion = 0;
+
 static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
 	switch (severity)
@@ -294,9 +296,18 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
 
 void Renderer::init()
 {
-	glDebugMessageCallback(OpenGLErrorCallback, nullptr);
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	// Get OpenGL version to determine whether
+	const char* version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
+	Log::message("OpenGL version: " + std::string(version));
+	char majorVersionChar = *version;
+	s_openGLMajorVersion = majorVersionChar - '0';
+
+	if (s_openGLMajorVersion > 3)
+	{
+		glDebugMessageCallback(OpenGLErrorCallback, nullptr);
+    	glEnable(GL_DEBUG_OUTPUT);
+    	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	}
 
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_DEPTH_TEST);

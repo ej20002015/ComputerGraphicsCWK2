@@ -74,7 +74,7 @@ void PerspectiveCamera::onUpdate(float timeStep)
         m_position += -rightDirection * m_speed * timeStep;
     }
 
-    if (m_lockYAxis)
+    if (m_lockYAxisPosition)
         m_position.y = currentYPosition;
 }
 
