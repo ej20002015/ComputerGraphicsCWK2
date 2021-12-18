@@ -63,7 +63,7 @@ void Scene::onUpdate(float timeStep)
 
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
 
-    Renderer::drawCircle(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("NO_MATERIAL"));
+    Renderer::drawCylinder(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), 16);
 
     // Render a textured cube
 

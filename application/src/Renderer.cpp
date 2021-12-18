@@ -2,6 +2,8 @@
 
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "Log.h"
 
@@ -294,11 +296,69 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
     glPopMatrix();
 }
 
-void Renderer::drawCylinder(const glm::mat4& transform, const Material& material)
+void Renderer::drawCylinder(const glm::mat4& transform, const Material& material, uint32_t LOD)
 {
+    loadMaterial(material);
+
+    // Apply the transform
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    float distanceBetweenCirclePoints = 360.0f / static_cast<float>(LOD);
+
+    glBegin(GL_TRIANGLES);
+
+    // Draw circle that faces the user
+    constexpr glm::vec3 frontCircleCenter = { 0.0f, 0.0f, 0.5f };
+
+    for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
+    {
+        glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
+        glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
+        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
+        glm::vec4 directionToFinalPoint = rotationMatrix * dir;
+        glm::vec4 finalPoint = glm::vec4(frontCircleCenter, 1.0f) + directionToFinalPoint;
+
+        // Draw triangle on the front face
+
+        glNormal3f(0.0f, 0.0f, 1.0f);
+        glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z);
+        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
+        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+
+        // Draw quad for the side of the cylinder
+
+        glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
+        glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
+
+        glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
+        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
+        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
+        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
+        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
+        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
+        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+
+        // Draw triangle on the back face
+
+        glNormal3f(0.0f, 0.0f, -1.0f);
+        glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z - 1.0f);
+        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
+        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+    }
+
+    glEnd();
+
+    glPopMatrix();
 }
 
-void Renderer::drawCircle(const glm::mat4& transform, const Material& material)
+void Renderer::drawCircle(const glm::mat4& transform, const Material& material, uint32_t LOD)
 {
 	loadMaterial(material);
 
@@ -308,11 +368,9 @@ void Renderer::drawCircle(const glm::mat4& transform, const Material& material)
 
     glMultMatrixf(glm::value_ptr(transform));
 
-	uint32_t detailValue = 100;
-
 	// Construct using a triangle fan
 
-	float distanceBetweenCirclePoints = 360.0f / static_cast<float>(detailValue);
+	float distanceBetweenCirclePoints = 360.0f / static_cast<float>(LOD);
 
 	constexpr glm::vec3 circleCenter = { 0.0f, 0.0f, 0.0f };
 
@@ -320,7 +378,7 @@ void Renderer::drawCircle(const glm::mat4& transform, const Material& material)
 
 	for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
 	{
-		glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)), 0.5f * glm::cos(glm::radians(theta)), 0.0f };
+		glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + circleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + circleCenter.y, circleCenter.z };
 		glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(circleCenter, 1.0f);
 		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
 		glm::vec4 directionToFinalPoint = rotationMatrix * dir;
@@ -346,7 +404,6 @@ void Renderer::init()
     char minorVersionChar = *(version + 2);
 	s_openGLMajorVersion = majorVersionChar - '0';
     s_openGLMinorVersion = minorVersionChar - '0';
-    //s_openGLVersion;
 
 	if (s_openGLMajorVersion > 3)
 	{
