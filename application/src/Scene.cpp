@@ -62,19 +62,23 @@ void Scene::onUpdate(float timeStep)
     Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 50.0f);
 
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
-
-    Renderer::drawCylinder(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), 16);
+    
+    Renderer::CylinderTextureSpecification textureSpecificationCylinder;
+    textureSpecificationCylinder.frontFace = &m_textureTest;
+    textureSpecificationCylinder.curvedFace = &m_textureTest;
+    textureSpecificationCylinder.backFace = &m_textureTest;
+    Renderer::drawCylinder(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecificationCylinder);
 
     // Render a textured cube
 
-    Renderer::CubeTextureSpecification textureSpecification;
-    textureSpecification.frontFace = &m_textureTest;
-    textureSpecification.backFace = &m_textureTest;
-    textureSpecification.rightFace = &m_textureTest;
-    textureSpecification.leftFace = &m_textureTest;
-    textureSpecification.topFace = &m_textureTest;
-    textureSpecification.bottomFace = &m_textureTest;
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecification);
+    Renderer::CubeTextureSpecification textureSpecificationCube;
+    textureSpecificationCube.frontFace = &m_textureTest;
+    textureSpecificationCube.backFace = &m_textureTest;
+    textureSpecificationCube.rightFace = &m_textureTest;
+    textureSpecificationCube.leftFace = &m_textureTest;
+    textureSpecificationCube.topFace = &m_textureTest;
+    textureSpecificationCube.bottomFace = &m_textureTest;
+    Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecificationCube);
 }
 
 void Scene::onUIRender()
