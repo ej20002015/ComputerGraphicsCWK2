@@ -22,7 +22,7 @@ static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	}
 }
 
-static glm::vec3 cubeVertexPositionsFrontFace[6] =
+static const glm::vec3 cubeVertexPositionsFrontFace[6] =
 {
     { -0.5f,  0.5f,  0.5f },
     { -0.5f, -0.5f,  0.5f },
@@ -32,7 +32,7 @@ static glm::vec3 cubeVertexPositionsFrontFace[6] =
     {  0.5f,  0.5f,  0.5f }
 };
 
-static glm::vec3 cubeVertexPositionsBackFace[6] =
+static const glm::vec3 cubeVertexPositionsBackFace[6] =
 {
     {  0.5f,  0.5f, -0.5f },
     {  0.5f, -0.5f, -0.5f },
@@ -42,7 +42,7 @@ static glm::vec3 cubeVertexPositionsBackFace[6] =
     { -0.5f,  0.5f, -0.5f }
 };
 
-static glm::vec3 cubeVertexPositionsRightFace[6] =
+static const glm::vec3 cubeVertexPositionsRightFace[6] =
 {
     {  0.5f,  0.5f,  0.5f },
     {  0.5f, -0.5f,  0.5f },
@@ -52,7 +52,7 @@ static glm::vec3 cubeVertexPositionsRightFace[6] =
     {  0.5f,  0.5f, -0.5f }
 };
 
-static glm::vec3 cubeVertexPositionsLeftFace[6] =
+static const glm::vec3 cubeVertexPositionsLeftFace[6] =
 {
     { -0.5f,  0.5f, -0.5f },
     { -0.5f, -0.5f, -0.5f },
@@ -62,7 +62,7 @@ static glm::vec3 cubeVertexPositionsLeftFace[6] =
     { -0.5f,  0.5f,  0.5f }
 };
 
-static glm::vec3 cubeVertexPositionsTopFace[6] =
+static const glm::vec3 cubeVertexPositionsTopFace[6] =
 {
     { -0.5f,  0.5f, -0.5f },
     { -0.5f,  0.5f,  0.5f },
@@ -72,7 +72,7 @@ static glm::vec3 cubeVertexPositionsTopFace[6] =
     {  0.5f,  0.5f, -0.5f }
 };
 
-static glm::vec3 cubeVertexPositionsBottomFace[6] =
+static const glm::vec3 cubeVertexPositionsBottomFace[6] =
 {
     { -0.5f, -0.5f,  0.5f },
     { -0.5f, -0.5f, -0.5f },
@@ -82,7 +82,7 @@ static glm::vec3 cubeVertexPositionsBottomFace[6] =
     {  0.5f, -0.5f,  0.5f }
 };
 
-static glm::vec2 cubeVertexTexCoords[6] =
+static const glm::vec2 cubeVertexTexCoords[6] =
 {
     { 0.0f, 1.0f },
     { 0.0f, 0.0f },

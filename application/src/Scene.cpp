@@ -20,16 +20,7 @@ void Scene::init()
 
     setUpLights();
     setUpMaterialLibrary();
-
-    Texture::TextureSpecification testTexturespecification;
-    testTexturespecification.wrappingMode = Texture::WrappingMode::REPEAT;
-    testTexturespecification.filepath = "assets/textures/markus.jpg";
-    m_textureTest.init(testTexturespecification);
-
-    Texture::TextureSpecification grassTextureSpecfication;
-    grassTextureSpecfication.wrappingMode = Texture::WrappingMode::MIRRORED_REPEAT;
-    grassTextureSpecfication.filepath = "assets/textures/grass.jpg";
-    m_grassTexture.init(grassTextureSpecfication);
+    setUpTextures();
 }
 
 void Scene::shutdown()
@@ -59,15 +50,11 @@ void Scene::onUpdate(float timeStep)
     // Render some ground
     Renderer::CubeTextureSpecification textureSpecificationGround;
     textureSpecificationGround.topFace = &m_grassTexture;
-    Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 50.0f);
+    Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), m_materialLibrary.at("NO_MATERIAL"), textureSpecificationGround, 25.0f);
 
     Renderer::drawCube(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"));
-    
-    Renderer::CylinderTextureSpecification textureSpecificationCylinder;
-    textureSpecificationCylinder.frontFace = &m_textureTest;
-    textureSpecificationCylinder.curvedFace = &m_textureTest;
-    textureSpecificationCylinder.backFace = &m_textureTest;
-    Renderer::drawCylinder(glm::translate(glm::mat4(1.0f), glm::vec3(-2.0f, 2.0f, 0.0f)), m_materialLibrary.at("GOLD"), textureSpecificationCylinder);
+
+    drawForest();
 
     // Render a textured cube
 
@@ -153,4 +140,123 @@ void Scene::setUpMaterialLibrary()
         { 1.0f, 1.0f, 1.0f, 1.0f },
         0.0f
     };
+}
+
+void Scene::setUpTextures()
+{
+    Texture::TextureSpecification testTexturespecification;
+    testTexturespecification.wrappingMode = Texture::WrappingMode::REPEAT;
+    testTexturespecification.filepath = "assets/textures/markus.jpg";
+    m_textureTest.init(testTexturespecification);
+
+    Texture::TextureSpecification grassTextureSpecfication;
+    grassTextureSpecfication.wrappingMode = Texture::WrappingMode::REPEAT;
+    grassTextureSpecfication.filepath = "assets/textures/grass.jpg";
+    m_grassTexture.init(grassTextureSpecfication);
+
+    Texture::TextureSpecification barkTextureSpecfication;
+    barkTextureSpecfication.wrappingMode = Texture::WrappingMode::REPEAT;
+    barkTextureSpecfication.filepath = "assets/textures/Bark.jpg";
+    m_barkTexture.init(barkTextureSpecfication);
+
+    Texture::TextureSpecification treeTrunkCrossSectionTextureSpecification;
+    treeTrunkCrossSectionTextureSpecification.wrappingMode = Texture::WrappingMode::REPEAT;
+    treeTrunkCrossSectionTextureSpecification.filepath = "assets/textures/treeTrunkCrossSection.jpg";
+    m_treeTrunkCrossSectionTexture.init(treeTrunkCrossSectionTextureSpecification);
+
+    Texture::TextureSpecification treeCanopyTextureSpecification;
+    treeCanopyTextureSpecification.wrappingMode = Texture::WrappingMode::REPEAT;
+    treeCanopyTextureSpecification.filepath = "assets/textures/treeCanopy.jpg";
+    m_treeCanopyTexture.init(treeCanopyTextureSpecification);
+}
+
+void Scene::drawForest()
+{
+    static const uint32_t treeCount = 18;
+    static const glm::vec3 treePositions[treeCount] =
+    {
+        {   5.0f, 0.0f,  14.0f },
+        {   7.5f, 0.0f,  11.0f },
+        {  10.0f, 0.0f,  15.0f },
+        {  14.0f, 0.0f,   5.0f },
+        {  17.0f, 0.0f,  14.0f },
+        {   3.0f, 0.0f, -14.0f },
+        {   3.0f, 0.0f, -24.0f },
+        {   5.0f, 0.0f,  -6.5f },
+        {  13.0f, 0.0f, -12.5f },
+        { -17.0f, 0.0f, -18.0f },
+        { -13.0f, 0.0f,  -4.0f },
+        {  -9.0f, 0.0f, -18.0f },
+        {  -6.0f, 0.0f,  -7.0f },
+        { -15.0f, 0.0f,   5.0f },
+        { -13.5f, 0.0f,  21.0f },
+        { -10.0f, 0.0f,   7.0f },
+        {  -7.0f, 0.0f,   4.0f },
+        {  -4.0f, 0.0f,   4.0f }
+    };
+
+    static float treeRotations[treeCount] =
+    {
+        68,
+        27,
+        84,
+        77,
+        79,
+        53,
+        80,
+        13,
+        45,
+        5,
+        3,
+        8,
+        46,
+        31,
+        64,
+        83,
+        58,
+        70
+    };
+
+    for (uint32_t i = 0; i < treeCount; i++)
+    {
+        glm::vec3 treePosition = treePositions[i];
+        float treeRotation = treeRotations[i];
+        glm::mat4 translation = glm::translate(glm::mat4(1.0f), { treePosition.x, treePosition.y, treePosition.z });
+        glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), treeRotation, { 0.0f, 1.0f, 0.0f });
+        drawTree(translation * rotation);
+    }
+}
+
+void Scene::drawTree(const glm::mat4& transform)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    // Draw the trunk of the tree
+
+    Renderer::CylinderTextureSpecification textureSpecificationTrunk;
+    textureSpecificationTrunk.frontFace = &m_treeTrunkCrossSectionTexture;
+    textureSpecificationTrunk.curvedFace = &m_barkTexture;
+    textureSpecificationTrunk.backFace = &m_treeTrunkCrossSectionTexture;
+    glm::mat4 trunkTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 1.4f, 0.0f });
+    glm::mat4 trunkRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
+    glm::mat4 trunkScale = glm::scale(glm::mat4(1.0f), { 1.0f, 1.0f, 3.0f });
+    Renderer::drawCylinder(trunkTranslation * trunkRotation * trunkScale, m_materialLibrary.at("NO_MATERIAL"), textureSpecificationTrunk);
+
+    // Draw the tree canopy
+    Renderer::CubeTextureSpecification textureSpecificationCanopy;
+    textureSpecificationCanopy.frontFace = &m_treeCanopyTexture;
+    textureSpecificationCanopy.backFace = &m_treeCanopyTexture;
+    textureSpecificationCanopy.rightFace = &m_treeCanopyTexture;
+    textureSpecificationCanopy.leftFace = &m_treeCanopyTexture;
+    textureSpecificationCanopy.topFace = &m_treeCanopyTexture;
+    textureSpecificationCanopy.bottomFace = &m_treeCanopyTexture;
+    glm::mat4 canopyTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 2.5f, 0.0f });
+    glm::mat4 canopyScale = glm::scale(glm::mat4(1.0f), { 2.0f, 2.0f, 2.0f });
+    Renderer::drawCube(canopyTranslation * canopyScale, m_materialLibrary.at("NO_MATERIAL"), textureSpecificationCanopy);
+
+
+    glPopMatrix();
 }
