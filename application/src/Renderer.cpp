@@ -5,7 +5,7 @@
 
 #include "Log.h"
 
-uint32_t Renderer::s_openGLMajorVersion = 0;
+uint32_t Renderer::s_openGLMajorVersion = 0, Renderer::s_openGLMinorVersion = 0;
 
 static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
 {
@@ -343,7 +343,10 @@ void Renderer::init()
 	const char* version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 	Log::message("OpenGL version: " + std::string(version));
 	char majorVersionChar = *version;
+    char minorVersionChar = *(version + 2);
 	s_openGLMajorVersion = majorVersionChar - '0';
+    s_openGLMinorVersion = minorVersionChar - '0';
+    //s_openGLVersion;
 
 	if (s_openGLMajorVersion > 3)
 	{

@@ -40,6 +40,7 @@ public:
 	static void setViewport(uint32_t width, uint32_t height);
 
 	static uint32_t getOpenGLMajorVersion() { return s_openGLMajorVersion; }
+	static uint32_t getOpenGLMinorVersion() { return s_openGLMinorVersion; }
 
 private:
 
@@ -47,5 +48,5 @@ private:
 
 private:
 
-	static uint32_t s_openGLMajorVersion;
+	static uint32_t s_openGLMajorVersion, s_openGLMinorVersion;
 };

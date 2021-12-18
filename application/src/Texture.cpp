@@ -3,6 +3,7 @@
 #include <filesystem>
 
 #include "Log.h"
+#include "Renderer.h"
 
 void Texture::init(const TextureSpecification& specification)
 {
@@ -24,18 +25,27 @@ void Texture::init(const TextureSpecification& specification)
 
     glBindTexture(GL_TEXTURE_2D, m_rendererID);
 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+
     GLenum wrappingMode = getGLWrappingMode(specification.wrappingMode);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrappingMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrappingMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrappingMode);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getGLMinFilter(specification.minFilter));
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, getGLMagFilter(specification.magFilter));
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
+    if (Renderer::getOpenGLMajorVersion() > 2)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getGLMinFilter(specification.minFilter));
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, specification.minFilter == Filter::LINEAR ? GL_LINEAR : GL_NEAREST);
 
-    glGenerateMipmap(GL_TEXTURE_2D);
+    // Use anisotropy filtering if OpenGL version greater than 4.5 (it became a core feature in 4.6)
+    if (Renderer::getOpenGLMajorVersion() > 3 && (Renderer::getOpenGLMajorVersion() > 4 || Renderer::getOpenGLMinorVersion() > 5))
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16);
 
     stbi_image_free(imageData);
 }
