@@ -16,6 +16,9 @@ void Scene::init()
     uint32_t windowHeight = Application::getWindow().getWindowProperties().height;
     m_camera.init(windowWidth, windowHeight);
 
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
     MaterialLibrary::init();
     setUpTextures();
     setUpLights();
@@ -29,11 +32,11 @@ void Scene::onUpdate(float timeStep)
 {
     Renderer::setClearColour(glm::vec4(0.396f, 0.761f, 0.961f, 1.0f));
 
-    // See light location
-
-    m_lights[0].renderLocation();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
     // If the camera is being used then disable the cursor
+
     if (m_camera.getCameraActive() && !Application::getWindow().getWindowCursorDisabled())
         Application::getWindow().setWindowCursorDisabled(true);
     else if (!m_camera.getCameraActive() && Application::getWindow().getWindowCursorDisabled())
@@ -43,13 +46,22 @@ void Scene::onUpdate(float timeStep)
     m_camera.onUpdate(timeStep);
 
     // Set view and projection matrices
+
     glMatrixMode(GL_MODELVIEW);
     glLoadMatrixf(glm::value_ptr(m_camera.getViewMatrix()));
 
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 
+    for (auto light : m_lights)
+        light.update();
+
+    // See light location
+
+    m_lights[0].renderLocation();
+
     // Render some ground
+    
     Renderer::CubeTextureSpecification textureSpecificationGround;
     textureSpecificationGround.topFace = &m_grassTexture;
     Renderer::drawCube(glm::scale(glm::mat4(1.0f), glm::vec3(50.0f, 0.5f, 50.0f)), MaterialLibrary::getMaterial("FAUNA"), textureSpecificationGround, 25.0f);

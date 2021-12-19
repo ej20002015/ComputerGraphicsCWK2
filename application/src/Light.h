@@ -18,6 +18,8 @@ public:
     ~Light();
     void init(const LightSpecification& specification);
 
+    void update();
+
     void renderLocation();
 
     void setPosition(const glm::vec3& position) { m_specification.position = position; setLightParameters(); }

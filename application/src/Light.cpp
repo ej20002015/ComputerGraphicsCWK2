@@ -32,6 +32,18 @@ void Light::init(const LightSpecification& specification)
     s_lightCount++;
 }
 
+void Light::update()
+{
+    glm::vec4 lightPosition = glm::vec4(m_specification.position, 1.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glLightfv(GL_LIGHT0 + m_lightNum, GL_POSITION, glm::value_ptr(lightPosition));
+
+    glPopMatrix();
+}
+
 void Light::renderLocation()
 {
     glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(m_specification.position));
@@ -50,13 +62,11 @@ void Light::setLightParameters()
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
-	glLoadIdentity();
 
     glLightfv(GL_LIGHT0 + m_lightNum, GL_POSITION, glm::value_ptr(lightPosition));
 
     glPopMatrix();
 
-    //glLightfv(GL_LIGHT0 + s_lightCount, GL_AMBIENT, glm::value_ptr(m_specification.colour));
     glLightfv(GL_LIGHT0 + m_lightNum, GL_DIFFUSE, glm::value_ptr(m_specification.colour));
     glLightfv(GL_LIGHT0 + m_lightNum, GL_SPECULAR, glm::value_ptr(m_specification.colour));
 }
