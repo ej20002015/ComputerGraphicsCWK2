@@ -207,7 +207,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
 
     glBegin(GL_TRIANGLES);
 
-    glNormal3f(0.0f, 1.0f, 0.0f);
+    glNormal3f(1.0f, 0.0f, 0.0f);
     for (uint32_t i = 0; i < 6; i++)
     {
         glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
@@ -231,7 +231,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
 
     glBegin(GL_TRIANGLES);
 
-    glNormal3f(0.0f, -1.0f, 0.0f);
+    glNormal3f(-1.0f, 0.0f, 0.0f);
     for (uint32_t i = 0; i < 6; i++)
     {
         glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;
@@ -279,7 +279,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
 
     glBegin(GL_TRIANGLES);
 
-    glNormal3f(0.0f, 1.0f, 0.0f);
+    glNormal3f(0.0f, -1.0f, 0.0f);
     for (uint32_t i = 0; i < 6; i++)
     {
         glm::vec2 tiledTexCoords = cubeVertexTexCoords[i] * tilingFactor;

@@ -11,6 +11,10 @@ public:
 
 	struct CubeTextureSpecification
 	{
+		CubeTextureSpecification() = default;
+		CubeTextureSpecification(const Texture* texture)
+			: frontFace(texture), backFace(texture), rightFace(texture), leftFace(texture), topFace(texture), bottomFace(texture) {}
+			
 		const Texture* frontFace = nullptr;
 		const Texture* backFace = nullptr;
 		const Texture* rightFace = nullptr;
@@ -29,8 +33,6 @@ public:
 public:
 
 	static void init();
-
-	// Draw geometry
 
 	static void drawCube(const glm::mat4& transform, const Material& material);
 	static void drawCube(const glm::mat4& transform, const Material& material, const CubeTextureSpecification& textureSpecification, float tilingFactor = 1.0f);

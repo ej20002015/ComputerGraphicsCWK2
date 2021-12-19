@@ -3,8 +3,8 @@
 #include <unordered_map>
 
 #include "PerspectiveCamera.h"
-#include "Material.h"
 #include "Texture.h"
+#include "Light.h"
 
 class Scene
 {
@@ -25,7 +25,6 @@ public:
 private:
 
 	void setUpLights();
-	void setUpMaterialLibrary();
 	void setUpTextures();
 	void drawForest();
 	void drawTree(const glm::mat4& transform);
@@ -33,10 +32,10 @@ private:
 private:
 
 	PerspectiveCamera m_camera;
-	std::unordered_map<std::string, Material> m_materialLibrary;
 	Texture m_textureTest;
 	Texture m_grassTexture;
 	Texture m_barkTexture;
 	Texture m_treeTrunkCrossSectionTexture;
 	Texture m_treeCanopyTexture;
+	std::array<Light, 1> m_lights;
 };
