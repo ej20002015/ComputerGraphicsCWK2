@@ -25,6 +25,10 @@ public:
 
 	struct CylinderTextureSpecification
 	{
+		CylinderTextureSpecification() = default;
+		CylinderTextureSpecification(const Texture * texture)
+			: frontFace(texture), curvedFace(texture), backFace(texture) {}
+
 		const Texture* frontFace = nullptr;
 		const Texture* curvedFace = nullptr;
 		const Texture* backFace = nullptr;
@@ -34,11 +38,15 @@ public:
 
 	static void init();
 
+	// Drawing methods
+
 	static void drawCube(const glm::mat4& transform, const Material& material);
 	static void drawCube(const glm::mat4& transform, const Material& material, const CubeTextureSpecification& textureSpecification, float tilingFactor = 1.0f);
 
 	static void drawCylinder(const glm::mat4& transform, const Material& material, uint32_t LOD = 32);
 	static void drawCylinder(const glm::mat4& transform, const Material& material, const CylinderTextureSpecification& textureSpecification, float tilingFactor = 1.0f, uint32_t LOD = 32);
+
+	static void drawOctahedron(const glm::mat4& transform, const Material& material);
 
 	static void drawCircle(const glm::mat4& transform, const Material& material, uint32_t LOD = 32);
 

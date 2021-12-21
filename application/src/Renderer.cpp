@@ -395,11 +395,11 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
         // Draw triangle on the front face
 
         glNormal3f(0.0f, 0.0f, 1.0f);
-        glTexCoord2f(0.5f, 0.5f);
+        glTexCoord2f(0.5f * tilingFactor, 0.5f * tilingFactor);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z);
-        glTexCoord2f(finalPoint.x + 0.5f, finalPoint.y + 0.5f);
+        glTexCoord2f((finalPoint.x + 0.5f) * tilingFactor, (finalPoint.y + 0.5f) * tilingFactor);
         glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-        glTexCoord2f(pointOnCircle.x + 0.5f, pointOnCircle.y + 0.5f);
+        glTexCoord2f((pointOnCircle.x + 0.5f) * tilingFactor, (pointOnCircle.y + 0.5f) * tilingFactor);
         glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
     }
 
@@ -431,16 +431,16 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
         glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
         glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
 
-        float leftTexCoord = glm::mix(0.0f, 1.0f, theta / 360.0f);
-        float rightTexCoord = glm::mix(0.0f, 1.0f, (theta + distanceBetweenCirclePoints) / 360.0f);
+        float leftTexCoord = glm::mix(0.0f, 1.0f, theta / 360.0f) * tilingFactor;
+        float rightTexCoord = glm::mix(0.0f, 1.0f, (theta + distanceBetweenCirclePoints) / 360.0f) * tilingFactor;
 
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
-        glTexCoord2f(leftTexCoord, 1.0f);
+        glTexCoord2f(leftTexCoord, 1.0f * tilingFactor);
         glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
         glTexCoord2f(leftTexCoord, 0.0f);
         glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
-        glTexCoord2f(rightTexCoord, 1.0f);
+        glTexCoord2f(rightTexCoord, 1.0f * tilingFactor);
         glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
         glTexCoord2f(leftTexCoord, 0.0f);
@@ -448,7 +448,7 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
         glTexCoord2f(rightTexCoord, 0.0f);
         glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-        glTexCoord2f(rightTexCoord, 1.0f);
+        glTexCoord2f(rightTexCoord, 1.0f * tilingFactor);
         glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
     }
 
@@ -478,11 +478,11 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
         // Draw triangle on the back face
 
         glNormal3f(0.0f, 0.0f, -1.0f);
-        glTexCoord2f(0.5f, 0.5f);
+        glTexCoord2f(0.5f * tilingFactor, 0.5f * tilingFactor);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z - 1.0f);
-        glTexCoord2f(pointOnCircle.x + 0.5f, pointOnCircle.y + 0.5f);
+        glTexCoord2f((pointOnCircle.x + 0.5f) * tilingFactor, (pointOnCircle.y + 0.5f) * tilingFactor);
         glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
-        glTexCoord2f(finalPoint.x + 0.5f, finalPoint.y + 0.5f);
+        glTexCoord2f((finalPoint.x + 0.5f) * tilingFactor, (finalPoint.y + 0.5f) * tilingFactor);
         glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
     }
 
@@ -494,12 +494,77 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
     glPopMatrix();
 }
 
+void Renderer::drawOctahedron(const glm::mat4& transform, const Material& material)
+{
+    loadMaterial(material);
+
+    // Apply the transform
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    // Construct a unit octahedron centered on the origin
+
+    glBegin(GL_TRIANGLES);
+
+    // Top 4 triangles
+
+    glNormal3f(0.0f, 1.0f, 1.0f);
+    glVertex3f( 0.0f,  0.5f,  0.0f);
+    glVertex3f(-0.5f,  0.0f,  0.5f);
+    glVertex3f( 0.5f,  0.0f,  0.5f);
+
+    glNormal3f(0.0f, 1.0f, -1.0f);
+    glVertex3f( 0.0f,  0.5f,  0.0f);
+    glVertex3f( 0.5f,  0.0f, -0.5f);
+    glVertex3f(-0.5f,  0.0f, -0.5f);
+
+    glNormal3f(1.0f, 1.0f, 0.0f);
+    glVertex3f( 0.0f,  0.5f,  0.0f);
+    glVertex3f( 0.5f,  0.0f,  0.5f);
+    glVertex3f( 0.5f,  0.0f, -0.5f);
+
+    glNormal3f(-1.0f, 1.0f, 0.0f);
+    glVertex3f( 0.0f,  0.5f,  0.0f);
+    glVertex3f(-0.5f,  0.0f, -0.5f);
+    glVertex3f(-0.5f,  0.0f,  0.5f);
+
+    // Bottom 4 triangles
+
+    glNormal3f(0.0f, -1.0f, 1.0f);
+    glVertex3f( 0.0f, -0.5f,  0.0f);
+    glVertex3f( 0.5f,  0.0f,  0.5f);
+    glVertex3f(-0.5f,  0.0f,  0.5f);
+
+    glNormal3f(0.0f, -1.0f, -1.0f);
+    glVertex3f( 0.0f, -0.5f,  0.0f);
+    glVertex3f(-0.5f,  0.0f, -0.5f);
+    glVertex3f( 0.5f,  0.0f, -0.5f);
+
+    glNormal3f(1.0f, -1.0f, 0.0f);
+    glVertex3f( 0.0f, -0.5f,  0.0f);
+    glVertex3f( 0.5f,  0.0f, -0.5f);
+    glVertex3f( 0.5f,  0.0f,  0.5f);
+
+    glNormal3f(-1.0f, -1.0f, 0.0f);
+    glVertex3f( 0.0f, -0.5f,  0.0f);
+    glVertex3f(-0.5f,  0.0f,  0.5f);
+    glVertex3f(-0.5f,  0.0f, -0.5f);
+
+    glEnd();
+
+    glPopMatrix();
+}
+
 //TODO: delete
 void Renderer::drawCircle(const glm::mat4& transform, const Material& material, uint32_t LOD)
 {
 	loadMaterial(material);
 
     // Apply the transform
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
