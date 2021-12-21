@@ -70,19 +70,14 @@ void Scene::onUpdate(float timeStep)
     textureSpecificationGround.topFace = &m_grassTexture;
     Renderer::drawCube(glm::scale(glm::mat4(1.0f), { 50.0f, 0.5f, 50.0f }), MaterialLibrary::getMaterial("FAUNA"), textureSpecificationGround, 25.0f);
 
-    // Draw the table along with the spinning top and map
-    drawTable(glm::translate(glm::mat4(1.0f), { -3.0f, 0.0f, -1.0f }));
-
-    //TODO: TEMP
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), { 0.0f, 2.0f, 0.0f }), MaterialLibrary::getMaterial("GOLD"));
-
     // Draw the forest
     drawForest();
 
-    //TODO: TEMP - Render a textured cube
+    // Draw the table along with the spinning top and map
+    drawTable(glm::translate(glm::mat4(1.0f), { -3.0f, 0.0f, -1.0f }));
 
-    Renderer::CubeTextureSpecification textureSpecificationCube(&m_textureTest);
-    Renderer::drawCube(glm::translate(glm::mat4(1.0f), { 2.0f, 2.0f, 0.0f }), MaterialLibrary::getMaterial("GOLD"), textureSpecificationCube);
+    // Draw the lumberjacks
+    drawLumberjacksScene(glm::translate(glm::mat4(1.0f), { 2.0f, 0.0f, 0.0f }));
 }
 
 void Scene::onUIRender()
@@ -147,7 +142,7 @@ void Scene::setUpLights()
 {
     Light::LightSpecification lightSpecification1;
     lightSpecification1.colour = { 1.0f, 1.0f, 1.0f, 1.0f };
-    lightSpecification1.position = { 0.0f, 4.0f, 0.0f };
+    lightSpecification1.position = { 0.0f, 6.0f, 0.0f };
 
     m_lights[0].init(lightSpecification1);
 }
@@ -247,6 +242,104 @@ void Scene::drawForest()
         glm::mat4 rotation = glm::rotate(glm::mat4(1.0f), treeRotation, { 0.0f, 1.0f, 0.0f });
         drawTree(translation * rotation);
     }
+}
+
+void Scene::drawLumberjacksScene(const glm::mat4& transform)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    // Draw the tree that is being chopped
+    drawTree(glm::mat4(1.0f));
+
+    // Draw some nearby logs that have already been chopped down
+
+    Renderer::CylinderTextureSpecification logCylinderTextureSpecification;
+    logCylinderTextureSpecification.frontFace = &m_treeTrunkCrossSectionTexture;
+    logCylinderTextureSpecification.curvedFace = &m_barkTexture;
+    logCylinderTextureSpecification.backFace = &m_treeTrunkCrossSectionTexture;
+
+    glm::mat4 logRotation = glm::rotate(glm::mat4(1.0f), glm::radians(45.0f), { 0.0f, 1.0f, 0.0f });
+    glm::mat4 logScale = glm::scale(glm::mat4(1.0f), { 0.5f, 0.5f, 1.5f });
+
+    glm::mat4 log1Translation = glm::translate(glm::mat4(1.0f), { 3.0f, 0.5f, 2.0f });
+    glm::mat4 log2Translation = glm::translate(glm::mat4(1.0f), { 4.0f, 0.5f, 2.0f });
+
+    Renderer::drawCylinder(log1Translation * logRotation * logScale, MaterialLibrary::getMaterial("WOOD"), logCylinderTextureSpecification);
+    Renderer::drawCylinder(log2Translation * logRotation * logScale, MaterialLibrary::getMaterial("WOOD"), logCylinderTextureSpecification);
+    
+    // Draw the lumberjacks
+
+    drawLumberjack(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 1.0f }));
+
+    glPopMatrix();
+}
+
+void Scene::drawLumberjack(const glm::mat4& transform)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+
+    glMultMatrixf(glm::value_ptr(transform));
+
+    glm::mat4 lumberjackCenterPosition = glm::translate(glm::mat4(1.0f), { 0.0f, 0.8f, 0.0f });
+    glMultMatrixf(glm::value_ptr(lumberjackCenterPosition));
+    glPushMatrix();
+
+    // Draw torso
+    Renderer::drawCube(glm::scale(glm::mat4(1.0f), { 0.35f, 0.45f, 0.15f }), MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+
+    // Draw legs
+
+    glm::mat4 lumberjackLegPosition = glm::translate(glm::mat4(1.0f), { 0.0f, -0.225f, 0.0f });
+    glMultMatrixf(glm::value_ptr(lumberjackLegPosition));
+    glPushMatrix();
+
+    glm::mat4 legRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
+    glm::mat4 legScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.4f });
+
+    glm::mat4 legTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.1f, 0.0f });
+    glm::mat4 legTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.1f, 0.0f });
+
+    Renderer::drawCylinder(legTranslationLeft * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(legTranslationRight * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+
+    // Draw boots
+
+    glm::mat4 footScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.025f , 0.15f });
+
+    glm::mat4 footTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.285f, 0.1f });
+    glm::mat4 footTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.285f, 0.1f });
+
+    Renderer::drawCube(footTranslationLeft * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCube(footTranslationRight * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+
+    glPopMatrix();
+    glPopMatrix();
+
+    // Draw neck
+
+    glm::mat4 neckTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 0.25f, 0.0f });
+    glMultMatrixf(glm::value_ptr(neckTranslation));
+    glPushMatrix();
+
+    glm::mat4 neckRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
+    glm::mat4 neckScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.1f });
+
+    Renderer::drawCylinder(neckRotation * neckScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+
+    // Draw head
+
+    glm::mat4 headTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 0.13f, 0.0f });
+    glm::mat4 headScale = glm::scale(glm::mat4(1.0f), { 0.2f, 0.2f, 0.2f });
+
+    Renderer::drawCube(headTranslation * headScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+
+    glPopMatrix();
+
+    glPopMatrix();
 }
 
 void Scene::drawTable(const glm::mat4& transform)

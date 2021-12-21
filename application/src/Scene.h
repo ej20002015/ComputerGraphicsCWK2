@@ -27,6 +27,8 @@ private:
 	void setUpLights();
 	void setUpTextures();
 	void drawForest();
+	void drawLumberjacksScene(const glm::mat4& transform);
+	void drawLumberjack(const glm::mat4& transform);
 	void drawTable(const glm::mat4& transform);
 	void drawTree(const glm::mat4& transform);
 
