@@ -619,6 +619,8 @@ void Renderer::init()
 
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_LIGHTING);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     // Enable backface culling
     glFrontFace(GL_CCW);

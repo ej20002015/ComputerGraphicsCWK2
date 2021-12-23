@@ -69,6 +69,14 @@ void MaterialLibrary::init()
         { 0.0f, 0.0f, 0.0f, 0.0f },
         0.0f
     };
+
+    s_materials["CHROME"] =
+    {
+        {     0.25f,     0.25f,     0.25f, 1.0f },
+        {      0.4f,      0.4f,      0.4f, 1.0f },
+        { 0.774597f, 0.774597f, 0.774597f, 1.0f },
+        76.8f
+    };
 }
 
 const Material& MaterialLibrary::getMaterial(const std::string& materialName)

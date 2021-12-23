@@ -5,6 +5,7 @@
 #include "PerspectiveCamera.h"
 #include "Texture.h"
 #include "Light.h"
+#include "Lumberjack.h"
 
 class Scene
 {
@@ -27,9 +28,8 @@ private:
 	void setUpLights();
 	void setUpTextures();
 	void drawForest();
-	void drawLumberjacksScene(const glm::mat4& transform);
-	void drawLumberjack(const glm::mat4& transform);
-	void drawTable(const glm::mat4& transform);
+	void drawLumberjacksScene(const glm::mat4& transform, float timeStep);
+	void drawTable(const glm::mat4& transform, float timeStep);
 	void drawTree(const glm::mat4& transform);
 
 private:
@@ -39,9 +39,6 @@ private:
 	std::array<Light, 1> m_lights;
 	bool m_showLightPositions = false;
 
-	//TODO: REMOVE
-	Texture m_textureTest;
-
 	Texture m_grassTexture;
 	Texture m_barkTexture;
 	Texture m_treeTrunkCrossSectionTexture;
@@ -49,7 +46,10 @@ private:
 	Texture m_tableTopTexture;
 	Texture m_tableLegTexture;
 	Texture m_mapTexture;
+	Texture m_markusTexture;
 
 	float m_spinningTopRotationAngle = 0.0f;
-	float m_spinningTopRotationSpeed = 1.0f;
+	float m_spinningTopRotationSpeed = 300.0f;
+
+	Lumberjack m_lumberjack;
 };

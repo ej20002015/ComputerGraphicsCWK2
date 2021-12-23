@@ -9,6 +9,7 @@
 #include "Renderer.h"
 #include "Application.h"
 #include "Material.h"
+#include "Log.h"
 
 void Scene::init()
 {
@@ -74,10 +75,10 @@ void Scene::onUpdate(float timeStep)
     drawForest();
 
     // Draw the table along with the spinning top and map
-    drawTable(glm::translate(glm::mat4(1.0f), { -3.0f, 0.0f, -1.0f }));
+    drawTable(glm::translate(glm::mat4(1.0f), { -3.0f, 0.0f, -1.0f }), timeStep);
 
     // Draw the lumberjacks
-    drawLumberjacksScene(glm::translate(glm::mat4(1.0f), { 2.0f, 0.0f, 0.0f }));
+    drawLumberjacksScene(glm::translate(glm::mat4(1.0f), { 2.0f, 0.0f, 0.0f }), timeStep);
 }
 
 void Scene::onUIRender()
@@ -126,7 +127,7 @@ void Scene::onUIRender()
 
     ImGui::Separator();
 
-    ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 0.5f, -100.0f, 100.0f);
+    ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 50.0f, -1000.0f, 1000.0f);
 
     ImGui::Separator();
 
@@ -149,11 +150,6 @@ void Scene::setUpLights()
 
 void Scene::setUpTextures()
 {
-    Texture::TextureSpecification testTexturespecification;
-    testTexturespecification.wrappingMode = Texture::WrappingMode::REPEAT;
-    testTexturespecification.filepath = "assets/textures/markus.jpg";
-    m_textureTest.init(testTexturespecification);
-
     Texture::TextureSpecification grassTextureSpecfication;
     grassTextureSpecfication.wrappingMode = Texture::WrappingMode::REPEAT;
     grassTextureSpecfication.filepath = "assets/textures/grass.jpg";
@@ -185,6 +181,11 @@ void Scene::setUpTextures()
     Texture::TextureSpecification mapTextureSpecifcation;
     mapTextureSpecifcation.filepath = "assets/textures/Mercator-projection.jpg";
     m_mapTexture.init(mapTextureSpecifcation);
+
+    Texture::TextureSpecification markusTextureSpecification;
+    markusTextureSpecification.filepath = "assets/textures/markus.jpg";
+    m_markusTexture.init(markusTextureSpecification);
+    m_lumberjack.setFaceTexture(&m_markusTexture);
 }
 
 void Scene::drawForest()
@@ -244,7 +245,7 @@ void Scene::drawForest()
     }
 }
 
-void Scene::drawLumberjacksScene(const glm::mat4& transform)
+void Scene::drawLumberjacksScene(const glm::mat4& transform, float timeStep)
 {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -272,77 +273,13 @@ void Scene::drawLumberjacksScene(const glm::mat4& transform)
     
     // Draw the lumberjacks
 
-    drawLumberjack(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 1.0f }));
+    m_lumberjack.setTransform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 1.0f }));
+    m_lumberjack.update(timeStep);
 
     glPopMatrix();
 }
 
-void Scene::drawLumberjack(const glm::mat4& transform)
-{
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-
-    glMultMatrixf(glm::value_ptr(transform));
-
-    glm::mat4 lumberjackCenterPosition = glm::translate(glm::mat4(1.0f), { 0.0f, 0.8f, 0.0f });
-    glMultMatrixf(glm::value_ptr(lumberjackCenterPosition));
-    glPushMatrix();
-
-    // Draw torso
-    Renderer::drawCube(glm::scale(glm::mat4(1.0f), { 0.35f, 0.45f, 0.15f }), MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-
-    // Draw legs
-
-    glm::mat4 lumberjackLegPosition = glm::translate(glm::mat4(1.0f), { 0.0f, -0.225f, 0.0f });
-    glMultMatrixf(glm::value_ptr(lumberjackLegPosition));
-    glPushMatrix();
-
-    glm::mat4 legRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
-    glm::mat4 legScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.4f });
-
-    glm::mat4 legTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.1f, 0.0f });
-    glm::mat4 legTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.1f, 0.0f });
-
-    Renderer::drawCylinder(legTranslationLeft * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-    Renderer::drawCylinder(legTranslationRight * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-
-    // Draw boots
-
-    glm::mat4 footScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.025f , 0.15f });
-
-    glm::mat4 footTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.285f, 0.1f });
-    glm::mat4 footTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.285f, 0.1f });
-
-    Renderer::drawCube(footTranslationLeft * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-    Renderer::drawCube(footTranslationRight * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-
-    glPopMatrix();
-    glPopMatrix();
-
-    // Draw neck
-
-    glm::mat4 neckTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 0.25f, 0.0f });
-    glMultMatrixf(glm::value_ptr(neckTranslation));
-    glPushMatrix();
-
-    glm::mat4 neckRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
-    glm::mat4 neckScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.1f });
-
-    Renderer::drawCylinder(neckRotation * neckScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-
-    // Draw head
-
-    glm::mat4 headTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 0.13f, 0.0f });
-    glm::mat4 headScale = glm::scale(glm::mat4(1.0f), { 0.2f, 0.2f, 0.2f });
-
-    Renderer::drawCube(headTranslation * headScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-
-    glPopMatrix();
-
-    glPopMatrix();
-}
-
-void Scene::drawTable(const glm::mat4& transform)
+void Scene::drawTable(const glm::mat4& transform, float timeStep)
 {
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -380,7 +317,7 @@ void Scene::drawTable(const glm::mat4& transform)
     // Draw spinning top
 
     glm::mat4 spinningTopTranslation = glm::translate(glm::mat4(1.0f), { 1.0f, 0.9f, 0.4f });
-    m_spinningTopRotationAngle = glm::mod<float>(m_spinningTopRotationAngle + (1.0f * m_spinningTopRotationSpeed), 360.0f);
+    m_spinningTopRotationAngle = glm::mod<float>(m_spinningTopRotationAngle + (timeStep * m_spinningTopRotationSpeed), 360.0f);
     glm::mat4 spinningTopRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_spinningTopRotationAngle), { 0.0f, 1.0f, 0.0f });
 
     glPushMatrix();
