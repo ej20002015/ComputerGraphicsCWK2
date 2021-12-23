@@ -60,6 +60,38 @@ void MaterialLibrary::init()
         32.0f
     };
 
+    s_materials["RED_CLOTH"] =
+    {
+        { 0.25f, 0.0f, 0.0f, 1.0f },
+        {  0.5f, 0.0f, 0.0f, 1.0f },
+        {  0.3f, 0.0f, 0.0f, 1.0f },
+        8.0f
+    };
+
+    s_materials["BLUE_CLOTH"] =
+    {
+        { 0.059f, 0.081f, 0.161f, 1.0f },
+        { 0.118f, 0.161f, 0.322f, 1.0f },
+        { 0.083f, 0.113f, 0.255f, 1.0f },
+        8.0f
+    };
+
+    s_materials["SKIN"] =
+    {
+        { 0.953f, 0.765f,  0.69f, 1.0f },
+        { 0.477f, 0.383f, 0.345f, 1.0f },
+        { 0.286f, 0.115f, 0.104f, 1.0f },
+        8.0f
+    };
+
+    s_materials["BLACK_LEATHER"] =
+    {
+        { 0.02f, 0.02f, 0.02f, 1.0f },
+        { 0.01f, 0.01f, 0.01f, 1.0f },
+        {  0.4f,  0.4f,  0.4f, 1.0f },
+        32.0f
+    };
+
 
     // Set to 5.0f to overcome the constant scene ambient value
     s_materials["WHITE_COLOUR"] =

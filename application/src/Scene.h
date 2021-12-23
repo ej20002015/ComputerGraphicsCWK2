@@ -47,9 +47,13 @@ private:
 	Texture m_tableLegTexture;
 	Texture m_mapTexture;
 	Texture m_markusTexture;
+	Texture m_marcTexture;
 
 	float m_spinningTopRotationAngle = 0.0f;
 	float m_spinningTopRotationSpeed = 300.0f;
 
-	Lumberjack m_lumberjack;
+	Lumberjack m_lumberjack1;
+	Lumberjack m_lumberjack2;
+	float m_lumberjacksRotationAngle = 0.0f;
+	float m_lumberjacksRotationSpeed = 50.0f;
 };

@@ -13,15 +13,14 @@ void Lumberjack::update(float timeStep)
 
     glMultMatrixf(glm::value_ptr(m_transform));
 
-    static float currentRotationValue = 0.0f;
-    currentRotationValue = glm::mod<float>(currentRotationValue + (m_rotationSpeed * timeStep), 1.0f);
+    m_currentRotationValue = glm::mod<float>(m_currentRotationValue + (m_animationSpeed * timeStep), 1.0f);
 
     glm::mat4 lumberjackCenterPosition = glm::translate(glm::mat4(1.0f), { 0.0f, 0.8f, 0.0f });
     glMultMatrixf(glm::value_ptr(lumberjackCenterPosition));
     glPushMatrix();
 
     // Draw torso
-    Renderer::drawCube(glm::scale(glm::mat4(1.0f), { 0.35f, 0.45f, 0.15f }), MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCube(glm::scale(glm::mat4(1.0f), { 0.35f, 0.45f, 0.15f }), MaterialLibrary::getMaterial("RED_CLOTH"));
 
     // Draw legs
 
@@ -35,18 +34,18 @@ void Lumberjack::update(float timeStep)
     glm::mat4 legLeftTranslation = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.1f, 0.0f });
     glm::mat4 legRightTranslation = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.1f, 0.0f });
 
-    Renderer::drawCylinder(legLeftTranslation * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-    Renderer::drawCylinder(legRightTranslation * legRotation * legScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(legLeftTranslation * legRotation * legScale, MaterialLibrary::getMaterial("BLUE_CLOTH"));
+    Renderer::drawCylinder(legRightTranslation * legRotation * legScale, MaterialLibrary::getMaterial("BLUE_CLOTH"));
 
     // Draw boots
 
-    glm::mat4 footScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.025f , 0.15f });
+    glm::mat4 footScale = glm::scale(glm::mat4(1.0f), { 0.12f, 0.05f , 0.2f });
 
-    glm::mat4 footTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.285f, 0.1f });
-    glm::mat4 footTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.285f, 0.1f });
+    glm::mat4 footTranslationLeft = glm::translate(glm::mat4(1.0f), { (-0.35f / 2.0f) + 0.1f, -0.285f, 0.03f });
+    glm::mat4 footTranslationRight = glm::translate(glm::mat4(1.0f), { (0.35f / 2.0f) - 0.1f, -0.285f, 0.03f });
 
-    Renderer::drawCube(footTranslationLeft * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
-    Renderer::drawCube(footTranslationRight * footScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCube(footTranslationLeft * footScale, MaterialLibrary::getMaterial("BLACK_LEATHER"));
+    Renderer::drawCube(footTranslationRight * footScale, MaterialLibrary::getMaterial("BLACK_LEATHER"));
 
     glPopMatrix();
     glPopMatrix();
@@ -60,7 +59,7 @@ void Lumberjack::update(float timeStep)
     glm::mat4 neckRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
     glm::mat4 neckScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.1f });
 
-    Renderer::drawCylinder(neckRotation * neckScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(neckRotation * neckScale, MaterialLibrary::getMaterial("SKIN"));
 
     // Draw head with provided texture
 
@@ -69,7 +68,7 @@ void Lumberjack::update(float timeStep)
 
     Renderer::CubeTextureSpecification headCubeTextureSpecification;
     headCubeTextureSpecification.frontFace = m_faceTexture;
-    Renderer::drawCube(headTranslation * headScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"), headCubeTextureSpecification);
+    Renderer::drawCube(headTranslation * headScale, MaterialLibrary::getMaterial("SKIN"), headCubeTextureSpecification);
 
     // Draw shoulders
 
@@ -80,14 +79,14 @@ void Lumberjack::update(float timeStep)
     glm::mat4 shouldersRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 0.0f, 1.0f, 0.0f });
     glm::mat4 shouldersScale = glm::scale(glm::mat4(1.0f), { 0.1f, 0.1f, 0.5f });
 
-    Renderer::drawCylinder(shouldersRotation * shouldersScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(shouldersRotation * shouldersScale, MaterialLibrary::getMaterial("RED_CLOTH"));
 
     // Draw upper, lower arms and the ax
 
     // Upper left arm
 
     const float upperArmRotationAngleApex = 45.0f;
-    float currentUpperArmRotationAngle = getRotationFunctionValue(currentRotationValue) * upperArmRotationAngleApex;
+    float currentUpperArmRotationAngle = getRotationFunctionValue(m_currentRotationValue) * upperArmRotationAngleApex;
     glm::mat4 upperArmRotation = glm::rotate(glm::mat4(1.0f), glm::radians(currentUpperArmRotationAngle), { -1.0f, 0.0f, 0.0f });
     glMultMatrixf(glm::value_ptr(upperArmRotation));
     glPushMatrix();
@@ -98,24 +97,28 @@ void Lumberjack::update(float timeStep)
     glMultMatrixf(glm::value_ptr(upperArmLeftTranslation));
     glPushMatrix();
 
-    Renderer::drawCube(upperArmScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCube(upperArmScale, MaterialLibrary::getMaterial("RED_CLOTH"));
 
     // Lower left arm
 
+    glm::mat4 lowerArmTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, -0.21f, 0.0f });
+    glMultMatrixf(glm::value_ptr(lowerArmTranslation));
+    // Translate to move the arm around a certian point
+    glMultMatrixf(glm::value_ptr(glm::translate(glm::mat4(1.0f), { 0.0f, 0.08f, 0.0f })));
+    glPushMatrix();
+
     const float lowerArmRotationAngleApex = 70.0f;
-    float currentLowerArmJerkRotationAngle = getJerkyRotationFunctionValue(currentRotationValue) * lowerArmRotationAngleApex;
+    float currentLowerArmJerkRotationAngle = getJerkyRotationFunctionValue(m_currentRotationValue) * lowerArmRotationAngleApex;
     glm::mat4 lowerArmAndHammerRotation = glm::rotate(glm::mat4(1.0f), glm::radians(currentLowerArmJerkRotationAngle), { -1.0f, 0.0f, 0.0f });
     glMultMatrixf(glm::value_ptr(lowerArmAndHammerRotation));
+    // Move arm back to correct position
+    glMultMatrixf(glm::value_ptr(glm::translate(glm::mat4(1.0f), { 0.0f, -0.08f, 0.0f })));
     glPushMatrix();
 
-    glm::mat4 lowerArmTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, -0.21f, 0.0f });
     glm::mat4 lowerArmRotation = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), { 1.0f, 0.0f, 0.0f });
-    glm::mat4 lowerArmScale = glm::scale(glm::mat4(1.0f), { 0.08f, 0.08f, 0.28f });
+    glm::mat4 lowerArmScale = glm::scale(glm::mat4(1.0f), { 0.07f, 0.08f, 0.28f });
 
-    glMultMatrixf(glm::value_ptr(lowerArmTranslation));
-    glPushMatrix();
-
-    Renderer::drawCylinder(lowerArmRotation * lowerArmScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(lowerArmRotation * lowerArmScale, MaterialLibrary::getMaterial("SKIN"));
 
     // Ax handle
 
@@ -125,7 +128,8 @@ void Lumberjack::update(float timeStep)
 
     glm::mat4 axHandleScale = glm::scale(glm::mat4(1.0f), { 0.05f, 0.05f, 0.2f });
 
-    Renderer::drawCylinder(axHandleScale, MaterialLibrary::getMaterial("WOOD"));
+    Renderer::CylinderTextureSpecification axHandleCylinderTextureSpecification(m_axHandleTexture);
+    Renderer::drawCylinder(axHandleScale, MaterialLibrary::getMaterial("WOOD"), axHandleCylinderTextureSpecification);
 
     // Ax blade
 
@@ -147,13 +151,13 @@ void Lumberjack::update(float timeStep)
     glMultMatrixf(glm::value_ptr(upperArmRightTranslation));
     glPushMatrix();
 
-    Renderer::drawCube(upperArmScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCube(upperArmScale, MaterialLibrary::getMaterial("RED_CLOTH"));
 
     // Lower right arm
 
     glMultMatrixf(glm::value_ptr(lowerArmTranslation));
 
-    Renderer::drawCylinder(lowerArmRotation * lowerArmScale, MaterialLibrary::getMaterial("GREEN_PLASTIC"));
+    Renderer::drawCylinder(lowerArmRotation * lowerArmScale, MaterialLibrary::getMaterial("SKIN"));
 
     glPopMatrix();
 

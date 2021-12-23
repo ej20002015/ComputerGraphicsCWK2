@@ -127,9 +127,24 @@ void Scene::onUIRender()
 
     ImGui::Separator();
 
-    ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 50.0f, -1000.0f, 1000.0f);
+    ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 25.0f, -1000.0f, 1000.0f);
 
     ImGui::Separator();
+
+    ImGui::Text("Lumberjack controls");
+
+    ImGui::Separator();
+
+    float lumberjackChopSpeed = m_lumberjack1.getAnimationSpeed();
+    if (ImGui::DragFloat("Lumberjacks chopping speed", &lumberjackChopSpeed, 0.05f, -2.0f, 2.0f))
+    {
+        m_lumberjack1.setAnimationSpeed(lumberjackChopSpeed);
+        m_lumberjack2.setAnimationSpeed(lumberjackChopSpeed);
+    }
+
+    ImGui::Separator();
+
+    ImGui::DragFloat("Lumberjacks rotation speed", &m_lumberjacksRotationSpeed, 5.0f, -200.0f, 200.0f);
 
     ImGui::End();
 }
@@ -177,6 +192,8 @@ void Scene::setUpTextures()
     Texture::TextureSpecification tableLegTextureSpecification;
     tableLegTextureSpecification.filepath = "assets/textures/tableLeg.jpg";
     m_tableLegTexture.init(tableLegTextureSpecification);
+    m_lumberjack1.setAxHandleTexture(&m_tableLegTexture);
+    m_lumberjack2.setAxHandleTexture(&m_tableLegTexture);
 
     Texture::TextureSpecification mapTextureSpecifcation;
     mapTextureSpecifcation.filepath = "assets/textures/Mercator-projection.jpg";
@@ -185,7 +202,12 @@ void Scene::setUpTextures()
     Texture::TextureSpecification markusTextureSpecification;
     markusTextureSpecification.filepath = "assets/textures/markus.jpg";
     m_markusTexture.init(markusTextureSpecification);
-    m_lumberjack.setFaceTexture(&m_markusTexture);
+    m_lumberjack1.setFaceTexture(&m_markusTexture);
+
+    Texture::TextureSpecification marcTextureSpecification;
+    marcTextureSpecification.filepath = "assets/textures/Marc_Dekamps.jpg";
+    m_marcTexture.init(marcTextureSpecification);
+    m_lumberjack2.setFaceTexture(&m_marcTexture);
 }
 
 void Scene::drawForest()
@@ -273,8 +295,25 @@ void Scene::drawLumberjacksScene(const glm::mat4& transform, float timeStep)
     
     // Draw the lumberjacks
 
-    m_lumberjack.setTransform(glm::translate(glm::mat4(1.0f), { 0.0f, 0.0f, 1.0f }));
-    m_lumberjack.update(timeStep);
+    // Calculate the position of the lumberjacks so they rotate around the center point (the tree)
+
+    const float circleRadius = 0.84f;
+    m_lumberjacksRotationAngle = glm::mod<float>(m_lumberjacksRotationAngle + (timeStep * m_lumberjacksRotationSpeed), 360.0f);
+    glm::vec3 lumberjack1Position = { circleRadius * glm::sin(glm::radians(m_lumberjacksRotationAngle)), 0.0f, circleRadius * glm::cos(glm::radians(m_lumberjacksRotationAngle)) };
+    glm::vec3 lumberjack2Position = -lumberjack1Position;
+    glm::mat4 lumberjack1Translation = glm::translate(glm::mat4(1.0f), { lumberjack1Position });
+    glm::mat4 lumberjack2Translation = glm::translate(glm::mat4(1.0f), { lumberjack2Position });
+
+    // Calculate the rotation of the lumberjacks so there always facing the center of the circle
+
+    glm::mat4 lumberjack1Rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_lumberjacksRotationAngle - 180.0f), { 0.0f, 1.0f, 0.0f });
+    glm::mat4 lumberjack2Rotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_lumberjacksRotationAngle), { 0.0f, 1.0f, 0.0f });
+
+    m_lumberjack1.setTransform(lumberjack1Translation * lumberjack1Rotation);
+    m_lumberjack1.update(timeStep);
+
+    m_lumberjack2.setTransform(lumberjack2Translation * lumberjack2Rotation);
+    m_lumberjack2.update(timeStep);
 
     glPopMatrix();
 }
