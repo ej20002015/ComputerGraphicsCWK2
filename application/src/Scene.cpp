@@ -10,6 +10,7 @@
 #include "Application.h"
 #include "Material.h"
 #include "Log.h"
+#include "UserInterface.h"
 
 void Scene::init()
 {
@@ -85,66 +86,94 @@ void Scene::onUIRender()
 {
     ImGui::Begin("Scene Settings");
 
-    static bool smoothShading = true;
-    if (ImGui::Checkbox("Smooth shading", &smoothShading))
-    {
-        if (smoothShading)
-            glShadeModel(GL_SMOOTH);
-        else
-            glShadeModel(GL_FLAT);
-    }
+    ImGui::Separator();
+    UserInterface::pushBoldFont();
+    ImGui::Text("Camera Settings");
+    UserInterface::popBoldFont();
+    ImGui::Separator();
 
     bool cameraLockYAxisPosition = m_camera.getLockYAxisPosition();
     if (ImGui::Checkbox("Lock Camera Y Axis Position", &cameraLockYAxisPosition))
         m_camera.setLockYAxisPosition(cameraLockYAxisPosition);
 
-    // Light controls
+    float cameraSpeed = m_camera.getSpeed();
+    if (ImGui::DragFloat("Camera Speed", &cameraSpeed, 0.1f, 0.2f, 10.0f))
+        m_camera.setSpeed(cameraSpeed);
+
+    float cameraSensitivity = m_camera.getSensitivity();
+    if (ImGui::DragFloat("Camera Sensitivity", &cameraSensitivity, 0.01f, 0.02f, 0.4f))
+        m_camera.setSensitivity(cameraSensitivity);
+
+    // Light settings
+    
+    ImGui::Separator();
+    UserInterface::pushBoldFont();
+    std::string lightSettingsHeader = std::string("Light Settings - Modifying Light ") + std::to_string(m_selectedLight);
+    ImGui::Text(lightSettingsHeader.c_str());
+    UserInterface::popBoldFont();
     ImGui::Separator();
 
-    ImGui::Text("Light Controls");
+    // Make a drop down so the user can choose which of the 3 lights to modify
 
+    const char* lightDropDownLabels[3] =
+    {
+        "Light 0",
+        "Light 1",
+        "Light 2"
+    };
+
+    const char* selectedDropDownLabel = lightDropDownLabels[m_selectedLight];
+
+    if (ImGui::BeginCombo("Select Light To Edit", selectedDropDownLabel, ImGuiComboFlags_NoArrowButton))
+    {
+        for (uint32_t i = 0; i < 3; i++)
+        {
+            bool isSelected = selectedDropDownLabel == lightDropDownLabels[i];
+            if (ImGui::Selectable(lightDropDownLabels[i], isSelected))
+                m_selectedLight = i;
+            
+            if (isSelected)
+                ImGui::SetItemDefaultFocus();
+        }
+
+        ImGui::EndCombo();
+    }
+
+    Light& light = m_lights[m_selectedLight];
     ImGui::Separator();
 
-    Light& light1 = m_lights[0];
-
-    glm::vec3 lightPosition = light1.getPosition();
+    glm::vec3 lightPosition = light.getPosition();
     if (ImGui::DragFloat3("Light Position", glm::value_ptr(lightPosition), 0.5f))
-        light1.setPosition(lightPosition);
+        light.setPosition(lightPosition);
 
-    ImGui::Separator();
-
-    glm::vec4 lightColour = light1.getColour();
+    glm::vec4 lightColour = light.getColour();
     if (ImGui::ColorPicker4("Light Colour", glm::value_ptr(lightColour)))
-        light1.setColour(lightColour);
+        light.setColour(lightColour);
+
+    ImGui::Checkbox("Show Light Positions", &m_showLightPositions);
 
     ImGui::Separator();
-
-    ImGui::Checkbox("Show light positions", &m_showLightPositions);
-
-    ImGui::Separator();
-
-    ImGui::Text("Spinning Top Controls");
-
+    UserInterface::pushBoldFont();
+    ImGui::Text("Spinning Top Settings");
+    UserInterface::popBoldFont();
     ImGui::Separator();
 
     ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 25.0f, -1000.0f, 1000.0f);
 
     ImGui::Separator();
-
-    ImGui::Text("Lumberjack controls");
-
+    UserInterface::pushBoldFont();
+    ImGui::Text("Lumberjack Settings");
+    UserInterface::popBoldFont();
     ImGui::Separator();
 
     float lumberjackChopSpeed = m_lumberjack1.getAnimationSpeed();
-    if (ImGui::DragFloat("Lumberjacks chopping speed", &lumberjackChopSpeed, 0.05f, -2.0f, 2.0f))
+    if (ImGui::DragFloat("Lumberjacks Chopping Speed", &lumberjackChopSpeed, 0.05f, -2.0f, 2.0f))
     {
         m_lumberjack1.setAnimationSpeed(lumberjackChopSpeed);
         m_lumberjack2.setAnimationSpeed(lumberjackChopSpeed);
     }
 
-    ImGui::Separator();
-
-    ImGui::DragFloat("Lumberjacks rotation speed", &m_lumberjacksRotationSpeed, 5.0f, -200.0f, 200.0f);
+    ImGui::DragFloat("Lumberjacks Rotation Speed", &m_lumberjacksRotationSpeed, 5.0f, -200.0f, 200.0f);
 
     ImGui::End();
 }
@@ -156,11 +185,14 @@ void Scene::onWindowResize(uint32_t width, uint32_t height)
 
 void Scene::setUpLights()
 {
-    Light::LightSpecification lightSpecification1;
-    lightSpecification1.colour = { 1.0f, 1.0f, 1.0f, 1.0f };
-    lightSpecification1.position = { 0.0f, 6.0f, 0.0f };
+    Light::LightSpecification lightSpecification1, lightSpecification2, lightSpecification3;
+    lightSpecification1.position = {  0.0f, 6.0f, 0.0f };
+    lightSpecification2.position = { -6.0f, 6.0f, 0.0f };
+    lightSpecification3.position = {  6.0f, 6.0f, 0.0f };
 
     m_lights[0].init(lightSpecification1);
+    m_lights[1].init(lightSpecification2);
+    m_lights[2].init(lightSpecification3);
 }
 
 void Scene::setUpTextures()

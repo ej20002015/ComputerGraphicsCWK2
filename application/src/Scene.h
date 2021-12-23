@@ -36,8 +36,9 @@ private:
 
 	PerspectiveCamera m_camera;
 
-	std::array<Light, 1> m_lights;
+	std::array<Light, 3> m_lights;
 	bool m_showLightPositions = false;
+	uint32_t m_selectedLight = 0;
 
 	Texture m_grassTexture;
 	Texture m_barkTexture;

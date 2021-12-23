@@ -1,5 +1,6 @@
 #include "UserInterface.h"
 
+#include <glfw3.h>
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -7,11 +8,13 @@
 #include "Application.h"
 #include "Renderer.h"
 
+ImFont* UserInterface::s_boldFont = nullptr;
+
 void UserInterface::init()
 {  
 
     /*
-    Boilerplate ImGui code taken from the imgui/examples/example_glfw_opengl3 directory
+    * Boilerplate ImGui code taken from the imgui/examples/example_glfw_opengl3 directory
     */
 
     // Setup Dear ImGui context
@@ -47,6 +50,12 @@ void UserInterface::init()
             ImGui_ImplOpenGL3_Init("#version 130");
             break;
     }
+
+    // Swap out the default font for something that looks better
+    ImFont* font = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Regular.ttf", 16.0f);
+    s_boldFont = io.Fonts->AddFontFromFileTTF("assets/fonts/OpenSans-Bold.ttf", 16.0f);
+    if (font)
+        io.FontDefault = font;
 }
 
 void UserInterface::shutdown()
@@ -82,4 +91,15 @@ void UserInterface::endFrame()
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
     }
+}
+
+void UserInterface::pushBoldFont()
+{
+    if (s_boldFont)
+        ImGui::PushFont(s_boldFont);
+}
+
+void UserInterface::popBoldFont()
+{
+    ImGui::PopFont();
 }

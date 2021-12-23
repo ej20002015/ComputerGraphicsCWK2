@@ -14,11 +14,15 @@ public:
     void onWindowResize(uint32_t width, uint32_t height);
 
     void setLockYAxisPosition(bool lockYAxisPosition) { m_lockYAxisPosition = lockYAxisPosition; }
+    void setSpeed(float speed) { m_speed = speed; }
+    void setSensitivity(float sensitivity) { m_sensitivity = sensitivity; }
 
     glm::mat4 getViewMatrix() const;
     glm::mat4 getProjectionMatrix() const;
     bool getCameraActive() const { return m_cameraActive; }
     bool getLockYAxisPosition() const { return m_lockYAxisPosition; }
+    float getSpeed() const { return m_speed; }
+    float getSensitivity() const { return m_sensitivity; }
 
 private:
 
