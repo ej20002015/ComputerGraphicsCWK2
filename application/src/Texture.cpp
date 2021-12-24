@@ -9,6 +9,8 @@ void Texture::init(const TextureSpecification& specification)
 {
     int32_t width, height, channels;
 
+    // By default STBI uses 0 in the y-axis to be the top of the image (like DirectX). OpenGL needs 0 to be aligned to the bottom of the image.
+    // Tells stbi to flip the image when loading so it matches with what OpenGL expects
     stbi_set_flip_vertically_on_load(true);
 
     void* imageData = stbi_load(specification.filepath.c_str(),  &width, &height, &channels, STBI_rgb);
@@ -29,10 +31,10 @@ void Texture::init(const TextureSpecification& specification)
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrappingMode);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrappingMode);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, wrappingMode);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, getGLMagFilter(specification.magFilter));
 
+    // Use mipmaps if supported by the version of OpenGL. If not, just use bilinear or nearest filtering.
     if (Renderer::getOpenGLMajorVersion() > 2)
     {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, getGLMinFilter(specification.minFilter));
@@ -45,6 +47,7 @@ void Texture::init(const TextureSpecification& specification)
     if (Renderer::getOpenGLMajorVersion() > 3 && (Renderer::getOpenGLMajorVersion() > 4 || Renderer::getOpenGLMinorVersion() > 5))
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16);
 
+    // Given the image data to the GPU so don't need it in CPU memory anymore so can tell STBI to free it
     stbi_image_free(imageData);
 }
 

@@ -10,13 +10,12 @@
 
 ImFont* UserInterface::s_boldFont = nullptr;
 
+/*
+* Boilerplate ImGui code taken from the imgui/examples/example_glfw_opengl3 directory
+*/
+
 void UserInterface::init()
 {  
-
-    /*
-    * Boilerplate ImGui code taken from the imgui/examples/example_glfw_opengl3 directory
-    */
-
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

@@ -26,10 +26,6 @@ void Scene::init()
     setUpLights();
 }
 
-void Scene::shutdown()
-{
-}
-
 void Scene::onUpdate(float timeStep)
 {
     // Set the background to a blueish sky colour
@@ -53,12 +49,12 @@ void Scene::onUpdate(float timeStep)
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(glm::value_ptr(m_camera.getProjectionMatrix()));
 
-    // Light position needs to be updated per frame since it is dependent on the modelview matrix
+    // Light positions needs to be updated per frame since it is dependent on the modelview matrix
 
     for (auto light : m_lights)
         light.update();
 
-    // See light location
+    // See light locations
 
     if (m_showLightPositions)
     {
@@ -85,6 +81,8 @@ void Scene::onUpdate(float timeStep)
 void Scene::onUIRender()
 {
     ImGui::Begin("Scene Settings");
+
+    // Camera settings
 
     ImGui::Separator();
     UserInterface::pushBoldFont();
@@ -152,6 +150,8 @@ void Scene::onUIRender()
 
     ImGui::Checkbox("Show Light Positions", &m_showLightPositions);
 
+    // Spinning top settings
+
     ImGui::Separator();
     UserInterface::pushBoldFont();
     ImGui::Text("Spinning Top Settings");
@@ -159,6 +159,8 @@ void Scene::onUIRender()
     ImGui::Separator();
 
     ImGui::DragFloat("Spinning Top Speed", &m_spinningTopRotationSpeed, 25.0f, -1000.0f, 1000.0f);
+
+    // Lumberjacks settings
 
     ImGui::Separator();
     UserInterface::pushBoldFont();
@@ -244,6 +246,8 @@ void Scene::setUpTextures()
 
 void Scene::drawForest()
 {
+    // Just hard coding some positions and rotations of the trees of the forest
+
     static const uint32_t treeCount = 18;
     static const glm::vec3 treePositions[treeCount] =
     {
@@ -301,12 +305,14 @@ void Scene::drawForest()
 
 void Scene::drawLumberjacksScene(const glm::mat4& transform, float timeStep)
 {
+    // Apply the transform
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     glMultMatrixf(glm::value_ptr(transform));
 
-    // Draw the tree that is being chopped
+    // Draw the tree that is being chopped in the center
     drawTree(glm::mat4(1.0f));
 
     // Draw some nearby logs that have already been chopped down
@@ -331,6 +337,7 @@ void Scene::drawLumberjacksScene(const glm::mat4& transform, float timeStep)
 
     const float circleRadius = 0.84f;
     m_lumberjacksRotationAngle = glm::mod<float>(m_lumberjacksRotationAngle + (timeStep * m_lumberjacksRotationSpeed), 360.0f);
+    // Using polar coordinates to get positions on a circle around the tree
     glm::vec3 lumberjack1Position = { circleRadius * glm::sin(glm::radians(m_lumberjacksRotationAngle)), 0.0f, circleRadius * glm::cos(glm::radians(m_lumberjacksRotationAngle)) };
     glm::vec3 lumberjack2Position = -lumberjack1Position;
     glm::mat4 lumberjack1Translation = glm::translate(glm::mat4(1.0f), { lumberjack1Position });
@@ -347,11 +354,14 @@ void Scene::drawLumberjacksScene(const glm::mat4& transform, float timeStep)
     m_lumberjack2.setTransform(lumberjack2Translation * lumberjack2Rotation);
     m_lumberjack2.update(timeStep);
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }
 
 void Scene::drawTable(const glm::mat4& transform, float timeStep)
 {
+    // Apply the transform
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
@@ -388,6 +398,8 @@ void Scene::drawTable(const glm::mat4& transform, float timeStep)
     // Draw spinning top
 
     glm::mat4 spinningTopTranslation = glm::translate(glm::mat4(1.0f), { 1.0f, 0.9f, 0.4f });
+    // Applying the modulus operator to the rotation angle so an overflow does not occur
+    // Angle goes smoothly from 0 to 360, and then immediately back to 0 again
     m_spinningTopRotationAngle = glm::mod<float>(m_spinningTopRotationAngle + (timeStep * m_spinningTopRotationSpeed), 360.0f);
     glm::mat4 spinningTopRotation = glm::rotate(glm::mat4(1.0f), glm::radians(m_spinningTopRotationAngle), { 0.0f, 1.0f, 0.0f });
 
@@ -422,11 +434,14 @@ void Scene::drawTable(const glm::mat4& transform, float timeStep)
 
     Renderer::drawCube(mapTranslation * mapScale, MaterialLibrary::getMaterial("WOOD"), mapCubeTextureSpecification);
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }
 
 void Scene::drawTree(const glm::mat4& transform)
 {
+    // Apply the transform
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
@@ -446,6 +461,7 @@ void Scene::drawTree(const glm::mat4& transform)
     Renderer::drawCylinder(trunkTranslation * trunkRotation * trunkScale, MaterialLibrary::getMaterial("WOOD"), trunkCylinderTextureSpecification);
 
     // Draw the tree canopy
+
     Renderer::CubeTextureSpecification canopyCubeTextureSpecification(&m_treeCanopyTexture);
 
     glm::mat4 canopyTranslation = glm::translate(glm::mat4(1.0f), { 0.0f, 2.5f, 0.0f });
@@ -453,5 +469,6 @@ void Scene::drawTree(const glm::mat4& transform)
 
     Renderer::drawCube(canopyTranslation * canopyScale, MaterialLibrary::getMaterial("FAUNA"), canopyCubeTextureSpecification);
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }

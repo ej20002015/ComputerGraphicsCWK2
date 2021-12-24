@@ -34,6 +34,8 @@ void Light::init(const LightSpecification& specification)
 
 void Light::update()
 {
+    // Updates the position of the light every frame which is necessary to stop the light moving with the camera
+
     glm::vec4 lightPosition = glm::vec4(m_specification.position, 1.0f);
 
     glMatrixMode(GL_MODELVIEW);
@@ -53,6 +55,7 @@ void Light::renderLocation()
     // Set the colour of the cube to the current colour of the light
     // Multiplying by 5 to overcome the ambient constant value of the scene
     colourMaterial.ambient = m_specification.colour * 5.0f;
+
     Renderer::drawCube(translation * scale, colourMaterial);
 }
 

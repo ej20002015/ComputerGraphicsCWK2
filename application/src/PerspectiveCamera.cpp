@@ -11,6 +11,7 @@ PerspectiveCamera::PerspectiveCamera()
 void PerspectiveCamera::init(uint32_t windowWidth, uint32_t windowHeight)
 {
     m_lastMousePosition = Input::getMousePosition();
+    // Call onWindowResize when being initialised to set the correct aspect ratio
     onWindowResize(windowWidth, windowHeight);
 }
 
@@ -34,7 +35,7 @@ void PerspectiveCamera::onUpdate(float timeStep)
     m_lastMousePosition = currentMousePosition;
 
     m_yaw += delta.x * m_sensitivity;
-    // Invert pitch
+    // Invert pitch control
     m_pitch -= delta.y * m_sensitivity;
 
     // Prevent camera from flipping

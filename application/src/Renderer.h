@@ -40,6 +40,8 @@ public:
 
 	// Drawing methods
 
+	// Some methods include a tilingFactor parameter so I can easily repeat textures across a face
+
 	static void drawCube(const glm::mat4& transform, const Material& material);
 	static void drawCube(const glm::mat4& transform, const Material& material, const CubeTextureSpecification& textureSpecification, float tilingFactor = 1.0f);
 
@@ -47,8 +49,6 @@ public:
 	static void drawCylinder(const glm::mat4& transform, const Material& material, const CylinderTextureSpecification& textureSpecification, float tilingFactor = 1.0f, uint32_t LOD = 32);
 
 	static void drawOctahedron(const glm::mat4& transform, const Material& material);
-
-	static void drawCircle(const glm::mat4& transform, const Material& material, uint32_t LOD = 32);
 
 	// Utility methods
 

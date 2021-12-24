@@ -34,7 +34,11 @@ private:
 
 private:
 
+    // Used to track the number of lights in the scene so that the legacy OpenGL limit of 8 is not exceeded
     static uint32_t s_lightCount;
+
+    // Initially set lightNum to 8 which is an invalid value
     uint32_t m_lightNum = 8;
+
     LightSpecification m_specification;
 };

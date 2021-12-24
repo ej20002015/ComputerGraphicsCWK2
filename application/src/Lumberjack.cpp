@@ -13,6 +13,8 @@ void Lumberjack::update(float timeStep)
 
     glMultMatrixf(glm::value_ptr(m_transform));
 
+    // m_currentRotationValue goes smoothly from 0 to 1, and then straight back to 0 again
+    // Is used as input into animation curves that return values that can be used to calculate the current rotation of limbs in the model
     m_currentRotationValue = glm::mod<float>(m_currentRotationValue + (m_animationSpeed * timeStep), 1.0f);
 
     glm::mat4 lumberjackCenterPosition = glm::translate(glm::mat4(1.0f), { 0.0f, 0.8f, 0.0f });

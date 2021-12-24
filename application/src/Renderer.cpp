@@ -16,9 +16,12 @@ static void OpenGLErrorCallback(GLenum source, GLenum type, GLuint id, GLenum se
 	case GL_DEBUG_SEVERITY_HIGH:
 		Log::fatal("OPENGL ERROR: " + std::string(message));
 		break;
-	default:
-		Log::message("OPENGL ERROR: " + std::string(message));
+	case GL_DEBUG_SEVERITY_MEDIUM:
+		Log::message("OPENGL WARNING: " + std::string(message));
 		break;
+    default:
+        // Don't care about any lower level messages
+        break;
 	}
 }
 
@@ -97,6 +100,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 	loadMaterial(material);
 
 	// Apply the transform
+
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 
@@ -136,6 +140,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material)
 
     glEnd();
 
+    // Restore the state of the MODELVIEW matrix
 	glPopMatrix();
 }
 
@@ -151,6 +156,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
 
     // Front face
 
+    // Only enable and apply texture if one is specified for the face
     if (textureSpecification.frontFace)
     {
         glEnable(GL_TEXTURE_2D);
@@ -293,6 +299,7 @@ void Renderer::drawCube(const glm::mat4& transform, const Material& material, co
     if (textureSpecification.bottomFace)
         glDisable(GL_TEXTURE_2D);
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }
 
@@ -315,6 +322,8 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
     for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
     {
+        // Create the cylinder circles using a triangle fan
+
         glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
         glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
         glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
@@ -330,6 +339,7 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
         // Draw quad for the side of the cylinder
 
+        // Specify different normals for the left and right side of the quad strip to give the appearence of it being rounded
         glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
         glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
 
@@ -354,6 +364,7 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
     glEnd();
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }
 
@@ -386,6 +397,8 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
     for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
     {
+        // Create the cylinder circles using a triangle fan
+
         glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
         glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
         glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
@@ -428,6 +441,7 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
         // Draw quad for the side of the cylinder
 
+        // Specify different normals for the left and right side of the quad strip to give the appearence of it being rounded
         glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
         glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
 
@@ -491,6 +505,7 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
     if (textureSpecification.backFace)
         glDisable(GL_TEXTURE_2D);
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
 }
 
@@ -555,51 +570,14 @@ void Renderer::drawOctahedron(const glm::mat4& transform, const Material& materi
 
     glEnd();
 
+    // Restore the state of the MODELVIEW matrix
     glPopMatrix();
-}
-
-//TODO: delete
-void Renderer::drawCircle(const glm::mat4& transform, const Material& material, uint32_t LOD)
-{
-	loadMaterial(material);
-
-    // Apply the transform
-
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-
-    glMultMatrixf(glm::value_ptr(transform));
-
-	// Construct using a triangle fan
-
-	float distanceBetweenCirclePoints = 360.0f / static_cast<float>(LOD);
-
-	constexpr glm::vec3 circleCenter = { 0.0f, 0.0f, 0.0f };
-
-	glBegin(GL_TRIANGLES);
-
-	for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
-	{
-		glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + circleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + circleCenter.y, circleCenter.z };
-		glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(circleCenter, 1.0f);
-		glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
-		glm::vec4 directionToFinalPoint = rotationMatrix * dir;
-		glm::vec4 finalPoint = glm::vec4(circleCenter, 1.0f) + directionToFinalPoint;
-
-		glNormal3f(0.0f, 0.0f, 1.0f);
-		glVertex3f(circleCenter.x, circleCenter.y, circleCenter.z);
-		glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-		glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
-	}
-
-	glEnd();
-
-	glPopMatrix();
 }
 
 void Renderer::init()
 {
-	// Get OpenGL version to determine whether
+	// Get OpenGL version so it can be used later to determine which features are available
+
 	const char* version = reinterpret_cast<const char*>(glGetString(GL_VERSION));
 	Log::message("OpenGL version: " + std::string(version));
 	char majorVersionChar = *version;
@@ -607,6 +585,7 @@ void Renderer::init()
 	s_openGLMajorVersion = majorVersionChar - '0';
     s_openGLMinorVersion = minorVersionChar - '0';
 
+    // Only enable modern error handling using the callback if supported
 	if (s_openGLMajorVersion > 3)
 	{
 		glDebugMessageCallback(OpenGLErrorCallback, nullptr);
@@ -614,15 +593,20 @@ void Renderer::init()
     	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 	}
 
+    // Normalise the normals so I don't have to worry about doing that myself
 	glEnable(GL_NORMALIZE);
+
 	glEnable(GL_DEPTH_TEST);
 
+    // Use smooth Gouraud shading since that looks better than flat
 	glShadeModel(GL_SMOOTH);
+
 	glEnable(GL_LIGHTING);
 
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     // Enable backface culling
+
     glFrontFace(GL_CCW);
     glCullFace(GL_BACK);
     glEnable(GL_CULL_FACE);

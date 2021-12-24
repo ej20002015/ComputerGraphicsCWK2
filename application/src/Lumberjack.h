@@ -4,6 +4,8 @@
 
 #include "Texture.h"
 
+// Represents a hierarchical lumberjack model
+
 class Lumberjack
 {
 public:
@@ -21,7 +23,11 @@ public:
 
 private:
 
+    // An animation curve that goes smoothly from 0 to 1, and then smoothly back to 0 again
+    // Used to animate the upper arm
     float getRotationFunctionValue(float x);
+    // An animation curve that goes smoothly from 0 to 1, then smoothly dips to about 0.5, then smoothly back up to 1, and then smoothly back down to 0 again
+    // Used to animate the lower arm and ax
     float getJerkyRotationFunctionValue(float x);
 
 private:

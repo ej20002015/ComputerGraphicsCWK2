@@ -1,6 +1,6 @@
 #pragma once
 
-//Key codes taken from glfw3.h
+// Key codes taken from glfw3.h
 
 enum class KeyCode : int32_t
 {

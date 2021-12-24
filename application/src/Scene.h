@@ -12,10 +12,8 @@ class Scene
 public:
 
 	void init();
-	void shutdown();
 
 	Scene() = default;
-	~Scene() = default;
 
 	void onUpdate(float timeStep);
 

@@ -41,7 +41,11 @@ private:
 
     float m_speed = 2.0f;
     float m_sensitivity = 0.2f;
+
+    // Flag that prevents a sudden change of direction when 
+    // starting to move the camera every time the right mouse button is pressed
     bool m_initialCameraManipulation = true;
+
     bool m_cameraActive = false;
     bool m_lockYAxisPosition = false;
 };

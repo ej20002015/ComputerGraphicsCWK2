@@ -47,8 +47,6 @@ Application::Application(const std::string& title)
 
 Application::~Application()
 {
-    m_scene.shutdown();
-
     if (m_window)
         UserInterface::shutdown();
         delete m_window;
@@ -67,6 +65,7 @@ void Application::run()
 
         Renderer::clear();
 
+        // Render scene
         m_scene.onUpdate(timeStep);
 
         UserInterface::startFrame();
