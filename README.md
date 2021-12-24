@@ -1,5 +1,10 @@
 # Computer Graphics Coursework 2
 
+## Requirements
+
+- C++17 compiler
+- Make or Visual Studio 2019 (depending on the platform being used)
+
 ## Build Instructions
 
 ### Windows
@@ -18,4 +23,5 @@
 ## Run instructions
 
 - Executable can be found in the directories below the application/bin/ directory
+- It's recommended to use the Release build as this will be much quicker (both GLM and STB_image run much faster in release)
 - Run the excecutable from the application directory since that's the working directory all the filepaths in the code are rooted in
