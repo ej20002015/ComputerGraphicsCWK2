@@ -86,7 +86,7 @@ void Scene::onUIRender()
 
     ImGui::Separator();
     UserInterface::pushBoldFont();
-    ImGui::Text("Camera Settings");
+    ImGui::Text("Camera Settings - Hold Right Click to Manipulate Camera");
     UserInterface::popBoldFont();
     ImGui::Separator();
 

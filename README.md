@@ -14,3 +14,8 @@
 ```sh scripts/GenerateLinuxFiles.bash```
 - Build the projects by running the following command: \
 ```make```
+
+## Run instructions
+
+- Executable can be found in the directories below the application/bin/ directory
+- Run the excecutable from the application directory since that's the working directory all the filepaths in the code are rooted in
