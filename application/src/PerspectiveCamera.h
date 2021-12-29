@@ -35,7 +35,7 @@ private:
     float m_yaw = -90.0f;
 
     float m_aspectRatio = 1.0f;
-    float m_nearClip = 0.0001f;
+    float m_nearClip = 0.01f;
     float m_farClip = 100.0f;
     float m_FOV = 45.0f;
 
