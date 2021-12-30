@@ -25,6 +25,7 @@ void Texture::init(const TextureSpecification& specification)
 
     glBindTexture(GL_TEXTURE_2D, m_rendererID);
 
+    // Get OpenGL to do gamma correction when sampling the texture by specifying am internal format of SRGB
     glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
 
     GLenum wrappingMode = getGLWrappingMode(specification.wrappingMode);
