@@ -324,42 +324,39 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
     {
         // Create the cylinder circles using a triangle fan
 
-        glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
-        glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
-        glm::vec4 directionToFinalPoint = rotationMatrix * dir;
-        glm::vec4 finalPoint = glm::vec4(frontCircleCenter, 1.0f) + directionToFinalPoint;
+        glm::vec3 pointOnCircle1 = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
+        glm::vec3 pointOnCircle2 = { 0.5f * glm::sin(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.y, frontCircleCenter.z };
 
         // Draw triangle on the front face
 
         glNormal3f(0.0f, 0.0f, 1.0f);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
 
         // Draw quad for the side of the cylinder
 
         // Specify different normals for the left and right side of the quad strip to give the appearence of it being rounded
-        glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
-        glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
+        glm::vec3 leftNormal = glm::normalize(pointOnCircle1 - frontCircleCenter);
+        glm::vec3 rightNormal = glm::normalize(pointOnCircle2 - frontCircleCenter);
 
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z - 1.0f);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
 
         // Draw triangle on the back face
 
         glNormal3f(0.0f, 0.0f, -1.0f);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z - 1.0f);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z - 1.0f);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
     }
 
     glEnd();
@@ -399,21 +396,18 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
     {
         // Create the cylinder circles using a triangle fan
 
-        glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
-        glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
-        glm::vec4 directionToFinalPoint = rotationMatrix * dir;
-        glm::vec4 finalPoint = glm::vec4(frontCircleCenter, 1.0f) + directionToFinalPoint;
+        glm::vec3 pointOnCircle1 = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
+        glm::vec3 pointOnCircle2 = { 0.5f * glm::sin(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.y, frontCircleCenter.z };
 
         // Draw triangle on the front face
 
         glNormal3f(0.0f, 0.0f, 1.0f);
         glTexCoord2f(0.5f * tilingFactor, 0.5f * tilingFactor);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z);
-        glTexCoord2f((finalPoint.x + 0.5f) * tilingFactor, (finalPoint.y + 0.5f) * tilingFactor);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
-        glTexCoord2f((pointOnCircle.x + 0.5f) * tilingFactor, (pointOnCircle.y + 0.5f) * tilingFactor);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glTexCoord2f((pointOnCircle2.x + 0.5f) * tilingFactor, (pointOnCircle2.y + 0.5f) * tilingFactor);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z);
+        glTexCoord2f((pointOnCircle1.x + 0.5f) * tilingFactor, (pointOnCircle1.y + 0.5f) * tilingFactor);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
     }
 
     glEnd();
@@ -433,37 +427,34 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
     for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
     {
-        glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
-        glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
-        glm::vec4 directionToFinalPoint = rotationMatrix * dir;
-        glm::vec4 finalPoint = glm::vec4(frontCircleCenter, 1.0f) + directionToFinalPoint;
+        glm::vec3 pointOnCircle1 = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
+        glm::vec3 pointOnCircle2 = { 0.5f * glm::sin(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.y, frontCircleCenter.z };
 
         // Draw quad for the side of the cylinder
 
         // Specify different normals for the left and right side of the quad strip to give the appearence of it being rounded
-        glm::vec3 leftNormal = glm::normalize(pointOnCircle - frontCircleCenter);
-        glm::vec3 rightNormal = glm::normalize(glm::vec3(finalPoint) - frontCircleCenter);
+        glm::vec3 leftNormal = glm::normalize(pointOnCircle1 - frontCircleCenter);
+        glm::vec3 rightNormal = glm::normalize(pointOnCircle2 - frontCircleCenter);
 
         float leftTexCoord = glm::mix(0.0f, 1.0f, theta / 360.0f) * tilingFactor;
         float rightTexCoord = glm::mix(0.0f, 1.0f, (theta + distanceBetweenCirclePoints) / 360.0f) * tilingFactor;
 
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
         glTexCoord2f(leftTexCoord, 1.0f * tilingFactor);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z - 1.0f);
         glTexCoord2f(leftTexCoord, 0.0f);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
         glTexCoord2f(rightTexCoord, 1.0f * tilingFactor);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
         glNormal3f(leftNormal.x, leftNormal.y, leftNormal.z);
         glTexCoord2f(leftTexCoord, 0.0f);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z);
         glNormal3f(rightNormal.x, rightNormal.y, rightNormal.z);
         glTexCoord2f(rightTexCoord, 0.0f);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z);
         glTexCoord2f(rightTexCoord, 1.0f * tilingFactor);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
     }
 
     glEnd();
@@ -483,21 +474,18 @@ void Renderer::drawCylinder(const glm::mat4& transform, const Material& material
 
     for (float theta = 0.0f; theta < 360.0f; theta += distanceBetweenCirclePoints)
     {
-        glm::vec3 pointOnCircle = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
-        glm::vec4 dir = glm::vec4(pointOnCircle, 1.0f) - glm::vec4(frontCircleCenter, 1.0f);
-        glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), glm::radians(distanceBetweenCirclePoints), { 0.0f, 0.0f, -1.0f });
-        glm::vec4 directionToFinalPoint = rotationMatrix * dir;
-        glm::vec4 finalPoint = glm::vec4(frontCircleCenter, 1.0f) + directionToFinalPoint;
+        glm::vec3 pointOnCircle1 = { 0.5f * glm::sin(glm::radians(theta)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta)) + frontCircleCenter.y, frontCircleCenter.z };
+        glm::vec3 pointOnCircle2 = { 0.5f * glm::sin(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.x, 0.5f * glm::cos(glm::radians(theta + distanceBetweenCirclePoints)) + frontCircleCenter.y, frontCircleCenter.z };
 
         // Draw triangle on the back face
 
         glNormal3f(0.0f, 0.0f, -1.0f);
         glTexCoord2f(0.5f * tilingFactor, 0.5f * tilingFactor);
         glVertex3f(frontCircleCenter.x, frontCircleCenter.y, frontCircleCenter.z - 1.0f);
-        glTexCoord2f((pointOnCircle.x + 0.5f) * tilingFactor, (pointOnCircle.y + 0.5f) * tilingFactor);
-        glVertex3f(pointOnCircle.x, pointOnCircle.y, pointOnCircle.z - 1.0f);
-        glTexCoord2f((finalPoint.x + 0.5f) * tilingFactor, (finalPoint.y + 0.5f) * tilingFactor);
-        glVertex3f(finalPoint.x, finalPoint.y, finalPoint.z - 1.0f);
+        glTexCoord2f((pointOnCircle1.x + 0.5f) * tilingFactor, (pointOnCircle1.y + 0.5f) * tilingFactor);
+        glVertex3f(pointOnCircle1.x, pointOnCircle1.y, pointOnCircle1.z - 1.0f);
+        glTexCoord2f((pointOnCircle2.x + 0.5f) * tilingFactor, (pointOnCircle2.y + 0.5f) * tilingFactor);
+        glVertex3f(pointOnCircle2.x, pointOnCircle2.y, pointOnCircle2.z - 1.0f);
     }
 
     glEnd();
