@@ -44,7 +44,7 @@ void Texture::init(const TextureSpecification& specification)
     else
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, specification.minFilter == Filter::LINEAR ? GL_LINEAR : GL_NEAREST);
 
-    // Use anisotropy filtering if OpenGL version greater than 4.5 (it became a core feature in 4.6)
+    // Use anisotropic filtering if OpenGL version greater than 4.5 (it became a core feature in 4.6)
     if (Renderer::getOpenGLMajorVersion() > 3 && (Renderer::getOpenGLMajorVersion() > 4 || Renderer::getOpenGLMinorVersion() > 5))
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, 16);
 
