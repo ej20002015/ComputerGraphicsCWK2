@@ -87,7 +87,7 @@ void Lumberjack::update(float timeStep)
 
     // Upper left arm
 
-    const float upperArmRotationAngleApex = 45.0f;
+    const float upperArmRotationAngleApex = 55.0f;
     float currentUpperArmRotationAngle = getRotationFunctionValue(m_currentRotationValue) * upperArmRotationAngleApex;
     glm::mat4 upperArmRotation = glm::rotate(glm::mat4(1.0f), glm::radians(currentUpperArmRotationAngle), { -1.0f, 0.0f, 0.0f });
     glMultMatrixf(glm::value_ptr(upperArmRotation));
@@ -168,9 +168,11 @@ void Lumberjack::update(float timeStep)
     glPopMatrix();
 }
 
+#include "Log.h"
+
 float Lumberjack::getRotationFunctionValue(float x)
 {
-    return (-1.25f * glm::pow(((2.0f * x) - 1.0f), 2.0f)) + 1.25f;
+    return (-1.0f * glm::pow(((2.0f * x) - 1.0f), 2.0f)) + 1.0f;
 }
 
 float Lumberjack::getJerkyRotationFunctionValue(float x)
