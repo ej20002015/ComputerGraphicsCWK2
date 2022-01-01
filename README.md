@@ -23,5 +23,17 @@
 ## Run instructions
 
 - Executable can be found in the directories below the application/bin/ directory
+- **Run the excecutable from the application directory since that's the working directory all the filepaths in the code are rooted in**
 - It's recommended to use the Release build as this will be much quicker (both GLM and STB_image run much faster in release)
-- Run the excecutable from the application directory since that's the working directory all the filepaths in the code are rooted in
+
+### Windows run
+- Run from within Visual Studio
+- *You could run the executable directly but the current working directory will need to be set properly before doing this (could use a shortcut)*
+
+### Linux run
+- from the project root folder run: \
+```cd application```
+- and depending on the type of build that was done, either: \
+```./bin/Debug-linux-x86_64/application/application``` \
+or \
+```./bin/Release-linux-x86_64/application/application```
