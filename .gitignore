@@ -18,3 +18,7 @@
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+
+# VSCode files
+
+.vscode
