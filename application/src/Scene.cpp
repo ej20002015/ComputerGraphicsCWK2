@@ -107,7 +107,7 @@ void Scene::onUIRender()
     ImGui::Separator();
     UserInterface::pushBoldFont();
     std::string lightSettingsHeader = std::string("Light Settings - Modifying Light ") + std::to_string(m_selectedLight);
-    ImGui::Text(lightSettingsHeader.c_str());
+    ImGui::Text("%s", lightSettingsHeader.c_str());
     UserInterface::popBoldFont();
     ImGui::Separator();
 
